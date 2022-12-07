@@ -1,0 +1,21 @@
+{
+  "name": "aps-chatbot1",
+  "version": "1.0.0",
+  "description": "WhatsApp Chatbot for APS Holdings for Collection and Customer Service Department",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Xolani Ganta",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "fastify": "^4.10.2",
+    "fastify-formbody": "^5.3.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.26.0",
+    "whatsappcloudapi_wrapper": "^1.0.13"
+  }
+}
