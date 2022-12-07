@@ -35,9 +35,9 @@ sequelize.authenticate()
     console.error('Unable to connect to the database:', err);
   });
 
-  const allrequests = sequelize.define(
-    "allrequests",{
-      id_type: DataTypes.TEXT
+  const user = sequelize.define(
+    "user",{
+        identity_number: DataTypes.TEXT
     },
     {
       createdAt: false,
@@ -45,16 +45,16 @@ sequelize.authenticate()
     }
   );
 
-allrequests.findAll({
+user.findAll({
     where:{
-        id_type:"SerialNumber"
+        identity_number:"12345678"
     },
     limit: 5,
   }).then(results => {
     const formattedResults = results.map(result =>{
         return{
             id: result.id,
-            type: result.id_type
+            type: result.identity_number
         }
     });
     console.log(formattedResults);
