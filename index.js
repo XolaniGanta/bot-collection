@@ -3,7 +3,7 @@ const express = require('express');
 dotenv.config();
 
 
-let chatbotRoute=require('./chatbotController');
+let chatbotRoute=require('./chatbotController.js');
 
 const main = async () => {
     const app = express();
@@ -15,5 +15,5 @@ const main = async () => {
         console.log("Establishing connection...");
     });
 }
-console.log(process.env.Meta_WA_SenderPhoneNumberId);
+//console.log(process.env.PORT);
 main();
