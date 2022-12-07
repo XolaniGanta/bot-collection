@@ -41,7 +41,8 @@ sequelize.authenticate()
     },
     {
       createdAt: false,
-      updatedAt: false
+      updatedAt: false,
+      freezeTableName: true
     }
   );
 
