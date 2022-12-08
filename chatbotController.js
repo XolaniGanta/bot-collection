@@ -106,8 +106,9 @@ router.post('/webhook', async (req, res) => {
                 limit:5
               })
                   if (reuse) {
+                   let msg = reuse.surname
                       await Whatsapp.sendText({
-                          message: (`${reuse.surname} dsgasbhvx`),
+                          message: (msg+` dsgasbhvx`),
                           recipientPhone: recipientPhone
                       });
                   }
