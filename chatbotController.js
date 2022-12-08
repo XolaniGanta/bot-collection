@@ -37,15 +37,16 @@ sequelize.authenticate()
 
   const user = sequelize.define(
     "user",{
-        identity_number: DataTypes.TEXT
+        identity_number: DataTypes.TEXT,
+        name:DataTypes.TEXT,
+        surname:DataTypes.TEXT
     },
     {
       
         createdAt: false,
         updatedAt: false,
-        freezeTableName: true,
-        name:DataTypes.TEXT,
-        surname:DataTypes.TEXT
+        freezeTableName: true
+        
     }
     
   );
@@ -106,10 +107,10 @@ router.post('/webhook', async (req, res) => {
                 limit:5
               })
                   if (reuse) {
-                   const forma = reuse.map(reuse => `IDNumber: ${reuse.identity_number}`
+                   const forma = reuse.map(reuse => `Hello your name is : ${reuse.name}`
                    );
                       await Whatsapp.sendText({
-                          message: (`${forma} dsgasbhvx`),
+                          message: (`${forma}`),
                           recipientPhone: recipientPhone
                       });
 
