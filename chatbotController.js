@@ -106,15 +106,14 @@ router.post('/webhook', async (req, res) => {
                 limit:5
               })
                   if (reuse) {
-                   const forma = reuse.map(reuse =>({
-                    identity_number:reuse.identity_number
-                   }))
+                   const forma = reuse.map(reuse => `IDNumber: ${reuse.identity_number}`
+                   );
                       await Whatsapp.sendText({
-                          message: (`${forma.identity_number} dsgasbhvx`),
+                          message: (`${forma} dsgasbhvx`),
                           recipientPhone: recipientPhone
                       });
 
-                      console.log(forma.identity_number)
+                      console.log(forma)
                   }
               }
           }
