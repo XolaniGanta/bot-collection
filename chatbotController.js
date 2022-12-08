@@ -110,11 +110,11 @@ router.post('/webhook', async (req, res) => {
                     identity_number:reuse.identity_number
                    }))
                       await Whatsapp.sendText({
-                          message: (`${forma} dsgasbhvx`),
+                          message: (`${forma.identity_number} dsgasbhvx`),
                           recipientPhone: recipientPhone
                       });
 
-                      console.log(forma)
+                      console.log(forma.identity_number)
                   }
               }
           }
