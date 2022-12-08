@@ -40,14 +40,14 @@ sequelize.authenticate()
         identity_number: DataTypes.TEXT
     },
     {
+      
+        createdAt: false,
+        updatedAt: false,
+        freezeTableName: true,
         name:DataTypes.TEXT,
         surname:DataTypes.TEXT
-    },
-    {
-      createdAt: false,
-      updatedAt: false,
-      freezeTableName: true
     }
+    
   );
 
   
