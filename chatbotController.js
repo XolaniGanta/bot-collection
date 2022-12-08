@@ -97,10 +97,54 @@ router.post('/webhook', async (req, res) => {
             let typeOfMsg = incomingMessage.type; // extract the type of message (some are text, others are images, others are responses to buttons etc...)
             let message_id = incomingMessage.message_id; // extract the message id
 
-            if (typeOfMsg === 'text_message') {
+
+           if (typeOfMsg === 'text_message') {
               let incomingTextMessage = incomingMessage.text.body;
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
-        
+              if (filterID === null) {
+                  await Whatsapp.sendText({
+                      message: `Hi ${recipientName}, Welcome to BestForU self-service. In order to continue you are required to enter your ID.`,
+                      recipientPhone: recipientPhone
+                  })
+              }
+          } 
+
+          if (typeOfMsg === 'text_message') {
+            let incomingTextMessage = incomingMessage.text.body;
+            let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
+        if (filterID !== null) {
+          const reuse = await user.findAll({
+            where:{
+              identity_number: filterID
+            },
+            limit:5
+          })
+          if (reuse){ 
+            await Whatsapp.sendSimpleButtons({
+            message: `Choose what operation do you want to perform`,
+            recipientPhone: recipientPhone,
+            listOfButtons: [{
+                title: 'Pay your account',
+                id: 'pay_account'
+            },
+            {
+                title: 'Check balance',
+                id: 'check_balance'
+            }
+            ]
+          
+        }) }
+        }else if(filterID != null){
+          await Whatsapp.sendText({
+              message: `${recipientName} seems you've entered a wrong id number, please check and enter again.  `,
+              recipientPhone: recipientPhone
+          })
+      }
+  }
+         
+       if (typeOfMsg === 'text_message') {
+              let incomingTextMessage = incomingMessage.text.body;
+              let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
           if (filterID !== null) {
             const reuse = await user.findAll({
                 where:{
