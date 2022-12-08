@@ -133,13 +133,13 @@ router.post('/webhook', async (req, res) => {
             }
             ]
           
-        }) }
-        }else if(filterID != null){
+        }) }else if(filterID != null){
           await Whatsapp.sendText({
               message: `${recipientName} seems you've entered a wrong id number, please check and enter again.  `,
               recipientPhone: recipientPhone
           })
       }
+        }
   }
          
        if (typeOfMsg === 'text_message') {
