@@ -103,7 +103,7 @@ router.post('/webhook', async (req, res) => {
               })
                   if (reuse) {
                       await Whatsapp.sendText({
-                          message: (`${reuse.id}`),
+                          message: (`${reuse.identity_number}`),
                           recipientPhone: recipientPhone
                       });
                   }
