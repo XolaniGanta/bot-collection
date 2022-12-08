@@ -39,7 +39,9 @@ sequelize.authenticate()
     "user",{
         identity_number: DataTypes.TEXT,
         name:DataTypes.TEXT,
-        surname:DataTypes.TEXT
+        surname:DataTypes.TEXT,
+        email:DataTypes.TEXT,
+        balance:DataTypes.DECIMAL
     },
     {
       
@@ -107,7 +109,7 @@ router.post('/webhook', async (req, res) => {
                 limit:5
               })
                   if (reuse) {
-                   const forma = reuse.map(reuse => `Hello your name is : ${reuse.name}`
+                   const forma = reuse.map(reuse => `Hello ${reuse.name} your current balance is: ${reuse.balance}`
                    );
                       await Whatsapp.sendText({
                           message: (`${forma}`),
