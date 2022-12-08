@@ -97,13 +97,13 @@ router.post('/webhook', async (req, res) => {
               if (filterID !== null) {
               const reuse = await user.findAll({
                 where:{
-                  identity_number:filterID
+                  identity_number:{identity_number}
                 },
                 limit:5
               })
                   if (reuse) {
                       await Whatsapp.sendText({
-                          message: (`${reuse.identity_number}`),
+                          message: (`${reuse.surname}`),
                           recipientPhone: recipientPhone
                       });
                   }
