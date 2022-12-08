@@ -94,13 +94,13 @@ router.post('/webhook', async (req, res) => {
               let incomingTextMessage = incomingMessage.text.body;
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
               //    const results = searchUser(filterID);
-              const reuse = user.findAll({
+              if (filterID !== null) {
+              const reuse = await user.findAll({
                 where:{
                   identity_number:filterID
                 },
                 limit:5
               })
-              if (filterID !== null) {
                   if (reuse) {
                       await Whatsapp.sendText({
                           message: ('${reuse.id}'),
