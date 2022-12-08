@@ -46,20 +46,7 @@ sequelize.authenticate()
     }
   );
 
-user.findAll({
-    where:{
-        identity_number:"12345678"
-    },
-    limit: 5,
-  }).then(results => {
-    const formattedResults = results.map(result =>{
-        return{
-            id: result.id,
-            type: result.identity_number
-        }
-    });
-    console.log(formattedResults);
-  });
+  
 
   //check our application
   router.get("/", (req, res) => {
@@ -102,6 +89,27 @@ router.post('/webhook', async (req, res) => {
             let recipientName = incomingMessage.from.name;
             let typeOfMsg = incomingMessage.type; // extract the type of message (some are text, others are images, others are responses to buttons etc...)
             let message_id = incomingMessage.message_id; // extract the message id
+
+            if (typeOfMsg === 'text_message') {
+              let incomingTextMessage = incomingMessage.text.body;
+              let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
+              //    const results = searchUser(filterID);
+              const reuse = user.findAll({
+                where:{
+                  identity_number:filterID
+                },
+                limit:5
+              })
+              if (filterID === null) {
+                  if (reuse) {
+                      await Whatsapp.sendText({
+                          message: ('${reuse.id'),
+                          recipientPhone: recipientPhone
+                      });
+                  }
+              }
+          }
+          
     }
     return res.sendStatus(200);
 } catch (error) {
