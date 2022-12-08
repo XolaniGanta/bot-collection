@@ -40,6 +40,10 @@ sequelize.authenticate()
         identity_number: DataTypes.TEXT
     },
     {
+        name:DataTypes.TEXT,
+        surname:DataTypes.TEXT
+    },
+    {
       createdAt: false,
       updatedAt: false,
       freezeTableName: true
@@ -93,8 +97,9 @@ router.post('/webhook', async (req, res) => {
             if (typeOfMsg === 'text_message') {
               let incomingTextMessage = incomingMessage.text.body;
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
-              if (filterID !== null) {
-              const reuse = await user.findAll({
+        
+          if (filterID !== null) {
+            const reuse = await user.findAll({
                 where:{
                   identity_number: filterID
                 },
