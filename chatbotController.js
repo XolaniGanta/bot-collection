@@ -100,10 +100,10 @@ router.post('/webhook', async (req, res) => {
                 },
                 limit:5
               })
-              if (filterID === null) {
+              if (filterID !== null) {
                   if (reuse) {
                       await Whatsapp.sendText({
-                          message: ('${reuse.id'),
+                          message: ('${reuse.id}'),
                           recipientPhone: recipientPhone
                       });
                   }
