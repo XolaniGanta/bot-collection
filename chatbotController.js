@@ -144,10 +144,20 @@ router.post('/webhook', async (req, res) => {
                       message: (`${forma}`),
                       recipientPhone: recipientPhone,
                       listOfButtons: [{
-                        title: 'Pay your account',
-                        id: 'pay_account'
-                    }]
+                        title: 'Settle your account',
+                        id: 'settle_account'
+                    },
+                    {
+                        title: 'Done',
+                        id: 'Done_btn'
+                  }]
                   });
+              }else {
+                // If no users are found
+                Whatsapp.sendTextMessage({
+                  message: `Oops!,it seems we can't find your id ${filterID}`,
+                  recipientPhone: recipientPhone
+                });
               }
           }
       }
