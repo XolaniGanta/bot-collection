@@ -127,10 +127,11 @@ router.post('/webhook', async (req, res) => {
             }
         }
 
-        if (typeOfMsg === 'text_message') {
+     if (typeOfMsg === 'text_message') {
           let incomingTextMessage = incomingMessage.text.body;
           let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
-      if (filterID !== null) {
+
+      if (filterID !== null && filterID === "Check balance") {
         const reuse = await user.findAll({
             where:{
               identity_number: filterID
