@@ -155,12 +155,22 @@ router.post('/webhook', async (req, res) => {
               }else {
                 // If no users are found
                await Whatsapp.sendText({
-                  message: `Oops!,it seems we can't find your id ${filterID}`,
-                  recipientPhone: recipientPhone
+                  message: `Oops!,it seems we can't find your id`,
+                  recipientPhone: recipientPhone,
                 });
               }
           }
       }
+
+      if(typeOfMsg === 'simple_button_message'){
+        let buttonID = incomingMessage.button_reply.id;
+        if (buttonID === 'Done_btn'){
+            await Whatsapp.sendText({
+              message: `Have a great day!`,
+              recipientPhone: recipientPhone
+            })
+        }
+    }
           
     }
     return res.sendStatus(200);
