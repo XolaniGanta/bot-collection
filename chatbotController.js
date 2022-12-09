@@ -102,68 +102,20 @@ router.post('/webhook', async (req, res) => {
               let incomingTextMessage = incomingMessage.text.body;
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
               if (filterID === null) {
-                  await Whatsapp.sendText({
-                      message: `Hi ${recipientName}, Welcome to BestForU self-service. In order to continue you are required to enter your ID.`,
-                      recipientPhone: recipientPhone
-                  })
+                Whatsapp.sendSimpleButtons({
+                  message: `Hi ${recipientName} Welcome to BestforU Self Service. Choose what operation do you want to perform`,
+                  recipientPhone: recipientPhone,
+                  listOfButtons: [{
+                      title: 'Pay your account',
+                      id: 'pay_account'
+                  },
+                  {
+                      title: 'Check balance',
+                      id: 'check_balance'
+                  }]
+                });
               }
           } 
-
-          if (typeOfMsg === 'text_message') {
-            let incomingTextMessage = incomingMessage.text.body;
-            let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
-        if (filterID !== null) {
-          const reuse = await user.findAll({
-            where:{
-              identity_number: filterID
-            },
-            limit:5
-          })
-          if (reuse){ 
-            await Whatsapp.sendSimpleButtons({
-            message: `Choose what operation do you want to perform`,
-            recipientPhone: recipientPhone,
-            listOfButtons: [{
-                title: 'Pay your account',
-                id: 'pay_account'
-            },
-            {
-                title: 'Check balance',
-                id: 'check_balance'
-            }
-            ]
-          
-        }) }else if(filterID != null){
-          await Whatsapp.sendText({
-              message: `${recipientName} seems you've entered a wrong id number, please check and enter again.  `,
-              recipientPhone: recipientPhone
-          })
-      }
-        }
-  }
-         
-       if (typeOfMsg === 'text_message') {
-              let incomingTextMessage = incomingMessage.text.body;
-              let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
-          if (filterID !== null) {
-            const reuse = await user.findAll({
-                where:{
-                  identity_number: filterID
-                },
-                limit:5
-              })
-                  if (reuse) {
-                   const forma = reuse.map(reuse => `Hello ${reuse.name} your current balance is: ${reuse.balance}`
-                   );
-                      await Whatsapp.sendText({
-                          message: (`${forma}`),
-                          recipientPhone: recipientPhone
-                      });
-
-                      console.log(forma)
-                  }
-              }
-          }
           
     }
     return res.sendStatus(200);
