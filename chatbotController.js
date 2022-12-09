@@ -119,7 +119,7 @@ router.post('/webhook', async (req, res) => {
 
           if(typeOfMsg === 'simple_button_message'){
             let buttonID = incomingMessage.button_reply.id;
-            if (buttonID === 'check_balance' || 'pay_account'){
+            if (buttonID === 'check_balance'){
               await Whatsapp.sendText({
                 message: `For security reasons you required to enter your id number.  `,
                 recipientPhone: recipientPhone
@@ -130,10 +130,10 @@ router.post('/webhook', async (req, res) => {
      if (typeOfMsg === 'text_message') {
           let incomingTextMessage = incomingMessage.text.body;
           let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
-          let checkBalance = incomingTextMessage;
+         
 
 
-      if (filterID !== null && checkBalance === "Check balance") {
+      if (filterID !== null) {
         const reuse = await user.findAll({
             where:{
               identity_number: filterID
