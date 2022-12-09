@@ -115,7 +115,19 @@ router.post('/webhook', async (req, res) => {
                   }]
                 });
               }
-          } 
+          }
+
+          if(typeOfMsg === 'simple_button_message'){
+            let buttonID = incomingMessage.button_reply.id;
+            if (buttonID === 'check_balance' || 'pay_account'){
+              await Whatsapp.sendText({
+                message: `For security reasons you required to enter your id number.  `,
+                recipientPhone: recipientPhone
+            })
+            }
+        }
+          
+          
           
     }
     return res.sendStatus(200);
