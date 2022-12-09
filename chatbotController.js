@@ -154,7 +154,7 @@ router.post('/webhook', async (req, res) => {
                   });
               }else {
                 // If no users are found
-                Whatsapp.sendTextMessage({
+               await Whatsapp.sendText({
                   message: `Oops!,it seems we can't find your id ${filterID}`,
                   recipientPhone: recipientPhone
                 });
