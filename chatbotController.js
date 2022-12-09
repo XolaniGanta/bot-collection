@@ -116,54 +116,54 @@ router.post('/webhook', async (req, res) => {
                 });
               }
           }
-
-          if(typeOfMsg === 'simple_button_message'){
+         
+     if (typeOfMsg === 'simple_button_message') {
             let buttonID = incomingMessage.button_reply.id;
-            if (buttonID === 'check_balance'){
+            if (buttonID === 'check_balance') {
               await Whatsapp.sendText({
                 message: `For security reasons you required to enter your id number.  `,
                 recipientPhone: recipientPhone
-            })
+              });
             }
-        }
-
-     if (typeOfMsg === 'text_message') {
-          let incomingTextMessage = incomingMessage.text.body;
-          let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
-         
-
-
-      if (filterID !== null) {
-        const reuse = await user.findAll({
-            where:{
-              identity_number: filterID
-            },
-            limit:5
-          })
-              if (reuse) {
-               const forma = reuse.map(reuse => `Hello ${reuse.name} your current balance is: ${reuse.balance}`
-               );
-                  await Whatsapp.sendSimpleButtons({
-                      message: (`${forma}`),
-                      recipientPhone: recipientPhone,
-                      listOfButtons: [{
-                        title: 'Settle your account',
-                        id: 'settle_account'
-                    },
-                    {
-                        title: 'Done',
-                        id: 'Done_btn'
+          } else if (typeOfMsg === 'text_message') {
+            let incomingTextMessage = incomingMessage.text.body;
+            let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
+            if (filterID !== null) {
+              // Find all users with the specified identity number
+              const users = await user.findAll({
+                where: {
+                  identity_number: filterID
+                },
+                limit: 5
+              });
+          
+              if (users && users.length > 0) {
+                // Map the users to their names and balances
+                const forma = users.map(user => `Hello ${user.name} your current balance is R: ${user.balance}`);
+          
+                // Send the message to the recipient
+                await Whatsapp.sendSimpleButtons({
+                  message: (`${forma}`),
+                  recipientPhone: recipientPhone,
+                  listOfButtons: [{
+                    title: 'Settle your account',
+                    id: 'settle_account'
+                  },
+                  {
+                    title: 'Done',
+                    id: 'Done_btn'
                   }]
-                  });
-              }else {
-                // If no users are found
-               await Whatsapp.sendText({
+                });
+              } else {
+                // If no users are found, send a message to the recipient
+                await Whatsapp.sendText({
                   message: `Oops!,it seems we can't find your id`,
                   recipientPhone: recipientPhone,
                 });
               }
+            }
           }
-      }
+          
 
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
