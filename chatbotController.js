@@ -126,8 +126,31 @@ router.post('/webhook', async (req, res) => {
             })
             }
         }
-          
-          
+
+        if (typeOfMsg === 'text_message') {
+          let incomingTextMessage = incomingMessage.text.body;
+          let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
+      if (filterID !== null) {
+        const reuse = await user.findAll({
+            where:{
+              identity_number: filterID
+            },
+            limit:5
+          })
+              if (reuse) {
+               const forma = reuse.map(reuse => `Hello ${reuse.name} your current balance is: ${reuse.balance}`
+               );
+                  await Whatsapp.sendSimpleButtons({
+                      message: (`${forma}`),
+                      recipientPhone: recipientPhone,
+                      listOfButtons: [{
+                        title: 'Pay your account',
+                        id: 'pay_account'
+                    }]
+                  });
+              }
+          }
+      }
           
     }
     return res.sendStatus(200);
