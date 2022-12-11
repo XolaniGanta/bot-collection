@@ -154,14 +154,14 @@ router.post('/webhook', async (req, res) => {
                     id: 'Done_btn'
                   }]
                 });
-              } else if(buttonID === 'pay_account') {
-                  await Whatsapp.sendText({
-                  message: `For security reasons you required to enter yours.  `,
-                  recipientPhone: recipientPhone
-                });
-              }
+              } 
             }
-          }
+          } else if(buttonID === 'pay_account') {
+            await Whatsapp.sendText({
+            message: `For security reasons you required to enter yours.  `,
+            recipientPhone: recipientPhone
+          });
+        }
         
         
       if(typeOfMsg === 'simple_button_message'){
