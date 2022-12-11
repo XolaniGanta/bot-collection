@@ -124,6 +124,34 @@ router.post('/webhook', async (req, res) => {
             });
           } 
         }
+
+        async  function pay_account(filterID){
+          const users = await user.findAll({
+            where: {
+              identity_number: filterID
+            },
+            limit: 5
+          });
+      
+          if (users && users.length > 0) {
+            // Map the users to their names and balances
+            const forma = users.map(user => `Hello your details are ${user.name} and your current balance is R: ${user.balance}`);
+      
+            // Send the message to the recipient
+            await Whatsapp.sendSimpleButtons({
+              message: (`${forma}`),
+              recipientPhone: recipientPhone,
+              listOfButtons: [{
+                title: 'Settle your account',
+                id: 'settle_account'
+              },
+              {
+                title: 'Done',
+                id: 'Done_btn'
+              }]
+            });
+          } 
+        }
             
 
 
@@ -162,7 +190,23 @@ router.post('/webhook', async (req, res) => {
               check_balance(filterID)
             }
           } 
-        
+
+          if (typeOfMsg === 'simple_button_message') {
+            let buttonID = incomingMessage.button_reply.id;
+            if (buttonID === 'pay_account') {
+              await Whatsapp.sendText({
+                message: `For security reasons you required to enter your id numbersss.  `,
+                recipientPhone: recipientPhone
+              });
+            }
+          } else if (typeOfMsg === 'text_message') {
+            let incomingTextMessage = incomingMessage.text.body;
+            let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
+            if (filterID !== null) {
+              // Find all users with the specified identity number
+              pay_account(filterID)
+            }
+          } 
         
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
