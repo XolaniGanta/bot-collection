@@ -126,12 +126,16 @@ router.post('/webhook', async (req, res) => {
         }
 
         async  function pay_account(filterID){
-          const users = await user.findAll({
-            where: {
-              identity_number: filterID
-            },
-            limit: 5
-          });
+          const users = await sequelize.query(
+            `SELECT * FROM users WITH (HOLDLOCK) WHERE identity_number = :filterID LIMIT 1`,
+            {
+              replacements: {
+                filterID: filterID
+              },
+              type: sequelize.QueryTypes.SELECT
+            }
+          );
+          
       
           if (users && users.length > 0) {
             // Map the users to their names and balances
