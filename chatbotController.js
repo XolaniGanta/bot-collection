@@ -197,10 +197,8 @@ router.post('/webhook', async (req, res) => {
               if(buttonID === 'check_balance')
               check_balance(filterID)
             }
-            else if(buttonID === 'pay_account'){
-              pay_account(filterID)
-            }
-          } 
+          }
+           
         
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
