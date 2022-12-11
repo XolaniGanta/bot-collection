@@ -126,16 +126,12 @@ router.post('/webhook', async (req, res) => {
         }
 
         async  function pay_account(filterID){
-          const users = await sequelize.query(
-            `SELECT * FROM users WITH (HOLDLOCK) WHERE identity_number = :filterID LIMIT 1`,
-            {
-              replacements: {
-                filterID: filterID
-              },
-              type: sequelize.QueryTypes.SELECT
-            }
-          );
-          
+          const users = await user.findAll({
+            where: {
+              identity_number: filterID
+            },
+            limit: 1
+          });
       
           if (users && users.length > 0) {
             // Map the users to their names and balances
@@ -186,18 +182,7 @@ router.post('/webhook', async (req, res) => {
                 recipientPhone: recipientPhone
               });
             }
-          } else if (typeOfMsg === 'text_message') {
-            let incomingTextMessage = incomingMessage.text.body;
-            let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
-            if (filterID !== null) {
-              // Find all users with the specified identity number
-              check_balance(filterID)
-            }
-          } 
-
-          if (typeOfMsg === 'simple_button_message') {
-            let buttonID = incomingMessage.button_reply.id;
-            if (buttonID === 'pay_account') {
+            else if (buttonID === 'pay_account') {
               await Whatsapp.sendText({
                 message: `For security reasons you required to enter your id numbersss.  `,
                 recipientPhone: recipientPhone
@@ -205,9 +190,14 @@ router.post('/webhook', async (req, res) => {
             }
           } else if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
+            let buttonID = incomingMessage.button_reply.id;
             let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
             if (filterID !== null) {
               // Find all users with the specified identity number
+              if(buttonID === 'check_balance')
+              check_balance(filterID)
+            }
+            else if(buttonID === 'pay_account'){
               pay_account(filterID)
             }
           } 
