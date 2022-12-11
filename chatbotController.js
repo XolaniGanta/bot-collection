@@ -154,63 +154,16 @@ router.post('/webhook', async (req, res) => {
                     id: 'Done_btn'
                   }]
                 });
-              } else {
-                // If no users are found, send a message to the recipient
-                await Whatsapp.sendText({
-                  message: `Oops!,it seems we can't find your id`,
-                  recipientPhone: recipientPhone,
+              } else if(buttonID === 'pay_account') {
+                  await Whatsapp.sendText({
+                  message: `For security reasons you required to enter yours.  `,
+                  recipientPhone: recipientPhone
                 });
               }
             }
           }
         
-          if (typeOfMsg === 'simple_button_message') {
-            let buttonID = incomingMessage.button_reply.id;
-            if (buttonID === 'pay_account') {
-              await Whatsapp.sendText({
-                message: `For security reasons you required to enter your id number.  `,
-                recipientPhone: recipientPhone
-              });
-            }
-          } else if (typeOfMsg === 'text_message') {
-            let incomingTextMessage = incomingMessage.text.body;
-            let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
-            if (filterID !== null) {
-              // Find all users with the specified identity number
-              const users = await user.findAll({
-                where: {
-                  identity_number: filterID
-                },
-                limit: 5
-              });
-
-              if (users && users.length > 0) {
-                // Map the users to their names and balances
-                const payAcc = users.map(user => `Hello ${user.name} your is R: ${user.balance}`);
-          
-                // Send the message to the recipient
-                await Whatsapp.sendSimpleButtons({
-                  message: (`${payAcc}`),
-                  recipientPhone: recipientPhone,
-                  listOfButtons: [{
-                    title: 'Settle your account',
-                    id: 'settle_account'
-                  },
-                  {
-                    title: 'Domino',
-                    id: 'Done_btn'
-                  }]
-                });
-              }else {
-                // If no users are found, send a message to the recipient
-                await Whatsapp.sendText({
-                  message: `Oops!,it seems we can't find your id`,
-                  recipientPhone: recipientPhone,
-                });
-              }
-            }
-          }
-
+        
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'Done_btn'){
