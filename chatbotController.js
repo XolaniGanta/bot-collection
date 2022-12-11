@@ -96,11 +96,13 @@ router.post('/webhook', async (req, res) => {
             let recipientName = incomingMessage.from.name;
             let typeOfMsg = incomingMessage.type; // extract the type of message (some are text, others are images, others are responses to buttons etc...)
             let message_id = incomingMessage.message_id; // extract the message id
+            let incomingTextMessage = incomingMessage.text.body;
+            let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
+            let buttonID = incomingMessage.button_reply.id;
+            
 
 
            if (typeOfMsg === 'text_message') {
-              let incomingTextMessage = incomingMessage.text.body;
-              let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
               if (filterID === null) {
                 Whatsapp.sendSimpleButtons({
                   message: `Hi ${recipientName} Welcome to BestforU Self Service. Choose what operation do you want to perform`,
@@ -118,21 +120,13 @@ router.post('/webhook', async (req, res) => {
           }
          
      if (typeOfMsg === 'simple_button_message') {
-            let buttonID = incomingMessage.button_reply.id;
             if (buttonID === 'check_balance') {
               await Whatsapp.sendText({
                 message: `For security reasons you required to enter your id number.  `,
                 recipientPhone: recipientPhone
               });
-            }else if(buttonID === 'pay_account') {
-              await Whatsapp.sendText({
-              message: `For security reasons you required to enter yours.  `,
-              recipientPhone: recipientPhone
-            });
-          }
+            }
           } else if (typeOfMsg === 'text_message') {
-            let incomingTextMessage = incomingMessage.text.body;
-            let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
             if (filterID !== null) {
               // Find all users with the specified identity number
               const users = await user.findAll({
@@ -165,7 +159,6 @@ router.post('/webhook', async (req, res) => {
         
         
       if(typeOfMsg === 'simple_button_message'){
-        let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'Done_btn'){
             await Whatsapp.sendText({
               message: `Have a great day!`,
