@@ -124,7 +124,12 @@ router.post('/webhook', async (req, res) => {
                 message: `For security reasons you required to enter your id number.  `,
                 recipientPhone: recipientPhone
               });
-            }
+            }else if(buttonID === 'pay_account') {
+              await Whatsapp.sendText({
+              message: `For security reasons you required to enter yours.  `,
+              recipientPhone: recipientPhone
+            });
+          }
           } else if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
@@ -156,12 +161,7 @@ router.post('/webhook', async (req, res) => {
                 });
               } 
             }
-          } else if(buttonID === 'pay_account') {
-            await Whatsapp.sendText({
-            message: `For security reasons you required to enter yours.  `,
-            recipientPhone: recipientPhone
-          });
-        }
+          } 
         
         
       if(typeOfMsg === 'simple_button_message'){
