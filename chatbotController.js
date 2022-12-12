@@ -37,7 +37,10 @@ sequelize.authenticate()
 
   const clientinfo = sequelize.define(
     "clientinfo",{
-        idnumber: DataTypes.TEXT,
+        idnumber:{ 
+          type: DataTypes.TEXT,
+          primaryKey: true
+        },
         name:DataTypes.TEXT,
         surname:DataTypes.TEXT,
         email:DataTypes.TEXT,
