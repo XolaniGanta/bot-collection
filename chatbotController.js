@@ -150,19 +150,19 @@ router.post('/webhook', async (req, res) => {
                     title: 'Payment Methods',
                     rows: [ {
                       title: 'INSTANT EFT',
-                      description: 'Instant EFT (EFT Secure) payment option redirects user to secure web page for online banking login process.',
+                      description: 'Redirects user to secure web page for online banking login process.',
                       id: 'Instant_eft'
                     },{
                       title: 'DEBIT/CREDIT CARD',
-                      description: 'Debit/Credit Card payment option redirects user to secure web page for card details.',
+                      description: 'Redirects user to secure web page for card details.',
                       id: 'debit_card'
                     },{
                       title: 'MASTERPASS PAYMENT',
-                      description:'The Masterpass app can be downloaded from the Android and iOS stores.',
+                      description:' Can be downloaded from the Android and iOS stores.',
                       id: 'masterpass_payment'
                     },{
                       title: 'CHIPS PAYMENT',
-                      description:'Install CHIPS® Money Manager app for use with CHIPS® platform.',
+                      description:'Install CHIPS® Money Manager app',
                       id: 'chips_payment'
                     },{
                       title: 'SnapScan',
