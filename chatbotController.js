@@ -151,7 +151,7 @@ router.post('/webhook', async (req, res) => {
                   },
                   {
                     title: 'SnapScan',
-                    id: 'Done_btn'
+                    id: 'vb_button'
                   }]
                 });
               } 
