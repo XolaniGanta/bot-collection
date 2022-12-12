@@ -107,66 +107,33 @@ router.post('/webhook', async (req, res) => {
       
           if (users && users.length > 0) {
             // Map the users to their names and balances
-            const forma = users.map(user => `Hello ${user.name} your current balance is R: ${user.balance}`);
+            const forma = users.map(user => ` ${user.name} ${user.surname}\n balance is: \nR${user.balance}\nPay by:`);
       
             // Send the message to the recipient
             await Whatsapp.sendSimpleButtons({
               message: (`${forma}`),
               recipientPhone: recipientPhone,
               listOfButtons: [{
-                title: 'Settle your account',
+                title: 'CREDIT CARD',
                 id: 'settle_account'
               },
               {
-                title: 'Done',
+                title: 'INSTANT EFT',
+                id: 'Done_btn'
+              },
+              {
+                title: 'SnapScan',
                 id: 'Done_btn'
               }]
             });
           } 
         }
-
-        async  function pay_account(filterID){
-          const users = await user.findAll({
-            where: {
-              identity_number: filterID
-            },
-            limit: 1
-          });
-      
-          if (users && users.length > 0) {
-            // Map the users to their names and balances
-            const forma = users.map(user => `Hello your details are ${user.name} and your current balance is R: ${user.balance}`);
-      
-            // Send the message to the recipient
-            await Whatsapp.sendSimpleButtons({
-              message: (`${forma}`),
-              recipientPhone: recipientPhone,
-              listOfButtons: [{
-                title: 'Settle your account',
-                id: 'settle_account'
-              },
-              {
-                title: 'Done',
-                id: 'Done_btn'
-              }]
-            });
-          } 
-        }
-
-        async function handleButton(){
-         let buttonID = incomingMessage.button_reply.id;
-          if(buttonID === 'check_balance'){
-          }
-        }
-            
-
-
            if (typeOfMsg === 'text_message') {
               let incomingTextMessage = incomingMessage.text.body;
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
               if (filterID === null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName} Welcome to BestforU Self Service. Pay your B4U account anytime, anywhere and on any device. To make payment simply click on Pay Now`,
+                  message: `Hey ${recipientName} Welcome to BestforU Self Service. To make payment simply click on Pay Now`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay Now',
@@ -178,18 +145,13 @@ router.post('/webhook', async (req, res) => {
          
      if (typeOfMsg === 'simple_button_message') {
             let buttonID = incomingMessage.button_reply.id;
-            if (buttonID === 'check_balance') {
+            if (buttonID === 'pay_account') {
               await Whatsapp.sendText({
-                message: `For security reasons you required to enter your id number.  `,
+                message: `For security reasons please enter your id number.  `,
                 recipientPhone: recipientPhone
               });
             }
-            else if (buttonID === 'pay_account') {
-              await Whatsapp.sendText({
-                message: `For security reasons you required to enter your id numbersss.  `,
-                recipientPhone: recipientPhone
-              });
-            }
+           
           } else if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
