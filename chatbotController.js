@@ -197,10 +197,9 @@ router.post('/webhook', async (req, res) => {
           } else if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
-            if (filterID !== null && filterID === 'Check balance') {
+            if (filterID !== null) {
               // Find all users with the specified identity number
               check_balance(filterID);
-              
             }
           }
            
