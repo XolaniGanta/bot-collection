@@ -141,12 +141,35 @@ router.post('/webhook', async (req, res) => {
                 const forma = users.map(clientinfo => `Hey ${clientinfo.name} ${clientinfo.surname} your current balance is R${clientinfo.nettsalary} you can use one of these payment methods to pay:`);
           
                 // Send the message to the recipient
-                await Whatsapp.sendSimpleButtons({
-                  message: (`${forma}`),
+                await Whatsapp.sendRadioButtons({
+                  headerText: 'Pay Your B4U Account',
+                  bodyText: (`${forma}`),
                   recipientPhone: recipientPhone,
-                  listOfButtons: [{
-                    title: 'CREDIT CARD',
-                    id: 'settle_account'
+                  footerText: 'bestforu',
+                  listOfSections: [{
+                    title: 'Payment Methods',
+                    rows: [ {
+                      title: 'INSTANT EFT',
+                      description: 'When the instant EFT (EFT Secure) payment option is selected, the user is redirected to a secure web page to capture facilitate the online banking login process.',
+                      id: 'Instant_eft'
+                    },{
+                      title: 'DEBIT/CREDIT CARD',
+                      description: 'When the Debit/Credit Card payment option is selected, the user is redirected to a secure web page to capture card details.',
+                      id: 'debit_card'
+                    },{
+                      title: 'MASTERPASS PAYMENT',
+                      description:'The Masterpass app can be downloaded from the Android and iOS stores.',
+                      id: 'masterpass_payment'
+                    },{
+                      title: 'CHIPS PAYMENT',
+                      description:'To use the CHIPS® platform, you need to install the CHIPS® Money Manager mobile app on a mobile device',
+                      id: 'chips_payment'
+                    },{
+                      title: 'SnapScan',
+                      description:'SnapScan is integrated with Masterpass and can therefore be used to scan the Masterpass created QR codes',
+                      id:'snap_scan'
+                    }
+                  ] 
                   },
                   {
                     title: 'INSTANT EFT',
