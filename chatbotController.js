@@ -146,8 +146,8 @@ router.post('/webhook', async (req, res) => {
                   bodyText: (`${forma}`),
                   recipientPhone: recipientPhone,
                   footerText: 'bestforu self-service',
+                  button_text:'Select your payment method',
                   listOfSections: [{
-                    header:'Select your payment method',
                     title: 'Payment Methods',
                     rows: [ {
                       title: 'INSTANT EFT',
