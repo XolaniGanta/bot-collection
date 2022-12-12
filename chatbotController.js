@@ -97,37 +97,6 @@ router.post('/webhook', async (req, res) => {
             let typeOfMsg = incomingMessage.type; // extract the type of message (some are text, others are images, others are responses to buttons etc...)
             let message_id = incomingMessage.message_id; // extract the message id
 
-      async  function check_balance(filterID){
-          const users = await user.findAll({
-            where: {
-              identity_number: filterID
-            },
-            limit: 5
-          });
-      
-          if (users && users.length > 0) {
-            // Map the users to their names and balances
-            const forma = users.map(user => ` ${user.name} ${user.surname}\n balance is: \nR${user.balance}\nPay by:`);
-      
-            // Send the message to the recipient
-            await Whatsapp.sendSimpleButtons({
-              message: (`${forma}`),
-              recipientPhone: recipientPhone,
-              listOfButtons: [{
-                title: 'CREDIT CARD',
-                id: 'settle_account'
-              },
-              {
-                title: 'INSTANT EFT',
-                id: 'Done_btn'
-              },
-              {
-                title: 'SnapScan',
-                id: 'Done_btn'
-              }]
-            });
-          } 
-        }
            if (typeOfMsg === 'text_message') {
               let incomingTextMessage = incomingMessage.text.body;
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
@@ -157,7 +126,35 @@ router.post('/webhook', async (req, res) => {
             let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
             if (filterID !== null) {
               // Find all users with the specified identity number
-              check_balance(filterID);
+              const users = await user.findAll({
+                where: {
+                  identity_number: filterID
+                },
+                limit: 5
+              });
+          
+              if (users && users.length > 0) {
+                // Map the users to their names and balances
+                const forma = users.map(user => ` ${user.name} ${user.surname}\n balance is: \nR${user.balance}\nPay by:`);
+          
+                // Send the message to the recipient
+                await Whatsapp.sendSimpleButtons({
+                  message: (`${forma}`),
+                  recipientPhone: recipientPhone,
+                  listOfButtons: [{
+                    title: 'CREDIT CARD',
+                    id: 'settle_account'
+                  },
+                  {
+                    title: 'INSTANT EFT',
+                    id: 'Done_btn'
+                  },
+                  {
+                    title: 'SnapScan',
+                    id: 'Done_btn'
+                  }]
+                });
+              } 
             }
           }
            
