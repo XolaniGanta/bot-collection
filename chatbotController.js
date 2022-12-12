@@ -145,7 +145,7 @@ router.post('/webhook', async (req, res) => {
                   headerText: 'Pay Your B4U Account',
                   bodyText: (`${forma}`),
                   recipientPhone: recipientPhone,
-                  footerText: 'bestforu',
+                  footerText: 'bestforu self-service',
                   listOfSections: [{
                     title: 'Payment Methods',
                     rows: [ {
@@ -158,7 +158,7 @@ router.post('/webhook', async (req, res) => {
                       id: 'debit_card'
                     },{
                       title: 'MASTERPASS PAYMENT',
-                      description:' Can be downloaded from the Android and iOS stores.',
+                      description:'Can be downloaded from the Android and iOS stores.',
                       id: 'masterpass_payment'
                     },{
                       title: 'CHIPS PAYMENT',
