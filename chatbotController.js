@@ -150,11 +150,11 @@ router.post('/webhook', async (req, res) => {
                     title: 'Payment Methods',
                     rows: [ {
                       title: 'INSTANT EFT',
-                      description: 'When the instant EFT (EFT Secure) payment option is selected, the user is redirected to a secure web page to capture facilitate the online banking login process.',
+                      description: 'Instant EFT (EFT Secure) payment option redirects user to secure web page for online banking login process.',
                       id: 'Instant_eft'
                     },{
                       title: 'DEBIT/CREDIT CARD',
-                      description: 'When the Debit/Credit Card payment option is selected, the user is redirected to a secure web page to capture card details.',
+                      description: 'Debit/Credit Card payment option redirects user to secure web page for card details.',
                       id: 'debit_card'
                     },{
                       title: 'MASTERPASS PAYMENT',
@@ -162,23 +162,15 @@ router.post('/webhook', async (req, res) => {
                       id: 'masterpass_payment'
                     },{
                       title: 'CHIPS PAYMENT',
-                      description:'To use the CHIPS® platform, you need to install the CHIPS® Money Manager mobile app on a mobile device',
+                      description:'Install CHIPS® Money Manager app for use with CHIPS® platform.',
                       id: 'chips_payment'
                     },{
                       title: 'SnapScan',
-                      description:'SnapScan is integrated with Masterpass and can therefore be used to scan the Masterpass created QR codes',
+                      description:'SnapScan integrated with Masterpass to scan QR codes.',
                       id:'snap_scan'
                     }
-                  ] 
-                  },
-                  {
-                    title: 'INSTANT EFT',
-                    id: 'Done_btn'
-                  },
-                  {
-                    title: 'SnapScan',
-                    id: 'vb_button'
-                  }]
+                  ]} 
+                ]
                 });
               } 
             }
