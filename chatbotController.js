@@ -35,13 +35,13 @@ sequelize.authenticate()
     console.error('Unable to connect to the database:', err);
   });
 
-  const user = sequelize.define(
-    "user",{
-        identity_number: DataTypes.TEXT,
+  const clientinfo = sequelize.define(
+    "clientinfo",{
+        idnumber: DataTypes.TEXT,
         name:DataTypes.TEXT,
         surname:DataTypes.TEXT,
         email:DataTypes.TEXT,
-        balance:DataTypes.DECIMAL
+        nettsalary:DataTypes.TEXT
     },
     {
       
@@ -126,16 +126,16 @@ router.post('/webhook', async (req, res) => {
             let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
             if (filterID !== null) {
               // Find all users with the specified identity number
-              const users = await user.findAll({
+              const users = await clientinfo.findAll({
                 where: {
-                  identity_number: filterID
+                  idnumber: filterID
                 },
                 limit: 5
               });
           
               if (users && users.length > 0) {
                 // Map the users to their names and balances
-                const forma = users.map(user => `Hey ${user.name} ${user.surname} your current balance is R${user.balance} you can use one of these payment methods to pay:`);
+                const forma = users.map(clientinfo => `Hey ${clientinfo.name} ${clientinfo.surname} your current balance is R${clientinfo.nettsalary} you can use one of these payment methods to pay:`);
           
                 // Send the message to the recipient
                 await Whatsapp.sendSimpleButtons({
