@@ -135,7 +135,7 @@ router.post('/webhook', async (req, res) => {
           
               if (users && users.length > 0) {
                 // Map the users to their names and balances
-                const forma = users.map(user => `Hey ${user.name} ${user.surname} you current balance is: R${user.balance} you can use one of these payment methods to pay:`);
+                const forma = users.map(user => `Hey ${user.name} ${user.surname} your current balance is R${user.balance} you can use one of these payment methods to pay:`);
           
                 // Send the message to the recipient
                 await Whatsapp.sendSimpleButtons({
