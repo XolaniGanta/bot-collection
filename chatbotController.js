@@ -3,6 +3,7 @@
 const router = require('express').Router();
 const WhatsappCloudAPI = require('whatsappcloudapi_wrapper');
 const {Sequelize, DataTypes} = require("sequelize");
+const paymentLink = 'https://instapay-sandbox.trustlinkhosting.com/index.php';
 
 const Whatsapp = new WhatsappCloudAPI({
     accessToken: process.env.Meta_WA_accessToken,
@@ -163,9 +164,9 @@ router.post('/webhook', async (req, res) => {
         
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
-        if (buttonID === 'Done_btn'){
+        if (buttonID === 'settle_ac'){
             await Whatsapp.sendText({
-              message: `Have a great day!`,
+              message: paymentLink,
               recipientPhone: recipientPhone
             })
         }
