@@ -138,41 +138,22 @@ router.post('/webhook', async (req, res) => {
           
               if (users && users.length > 0) {
                 // Map the users to their names and balances
-                const forma = users.map(clientinfo => `Hey ${clientinfo.name} ${clientinfo.surname} your current balance is R${clientinfo.nettsalary} you can use one of these payment methods to pay:`);
+                const forma = users.map(clientinfo => `Please Confirm if these details are correct: \nFull Name:${clientinfo.name} ${clientinfo.surname} \nCell No:${clientinfo.cellno}`);
           
                 // Send the message to the recipient
-                await Whatsapp.sendRadioButtons({
-                  headerText: 'Pay Your B4U Account',
-                  bodyText: (`${forma}`),
+                await Whatsapp.sendSimpleButtons({
+                  message: (`${forma}`),
                   recipientPhone: recipientPhone,
-                  footerText: 'bestforu self-service',
-                  listOfSections: [{
-                    actionTitle:'Select your payment method',
-                    title: 'Payment Methods',
-                    rows: [ {
-                      title: 'INSTANT EFT',
-                      description: 'Redirects user to secure web page for online banking login process.',
-                      id: 'Instant_eft'
-                    },{
-                      title: 'DEBIT/CREDIT CARD',
-                      description: 'Redirects user to secure web page for card details.',
-                      id: 'debit_card'
-                    },{
-                      title: 'MASTERPASS PAYMENT',
-                      description:'Can be downloaded from the Android and iOS stores.',
-                      id: 'masterpass_payment'
-                    },{
-                      title: 'CHIPS PAYMENT',
-                      description:'Install CHIPS® Money Manager app',
-                      id: 'chips_payment'
-                    },{
-                      title: 'SnapScan',
-                      description:'SnapScan integrated with Masterpass to scan QR codes.',
-                      id:'snap_scan'
-                    }
-                  ]} 
-                ]
+                  listOfButtons: [{
+                    title: 'Confirm',
+                    id: 'settle_ac'
+                  },
+                  {
+                    title: 'Domino',
+                    id: 'Done_btn'
+                  }]
                 });
+                
               } 
             }
           }
