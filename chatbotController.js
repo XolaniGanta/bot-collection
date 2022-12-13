@@ -43,8 +43,10 @@ sequelize.authenticate()
         },
         name:DataTypes.TEXT,
         surname:DataTypes.TEXT,
-        email:DataTypes.TEXT,
-        nettsalary:DataTypes.TEXT
+        Email:DataTypes.TEXT,
+        nettsalary:DataTypes.TEXT,
+        cellno:DataTypes.TEXT
+        
     },
     {
       
@@ -138,7 +140,7 @@ router.post('/webhook', async (req, res) => {
           
               if (users && users.length > 0) {
                 // Map the users to their names and balances
-                const forma = users.map(clientinfo => `Please Confirm if these details are correct: \nFull Name:${clientinfo.name} ${clientinfo.surname} \nCell No:${clientinfo.cellno}`);
+                const forma = users.map(clientinfo => `Please Confirm if these details are correct: \nFull Name:${clientinfo.name} ${clientinfo.surname} \nEmail:${clientinfo.Email} \nCell No:${clientinfo.cellno} \nBalance:${clientinfo.nettsalary}`);
           
                 // Send the message to the recipient
                 await Whatsapp.sendSimpleButtons({
@@ -149,7 +151,7 @@ router.post('/webhook', async (req, res) => {
                     id: 'settle_ac'
                   },
                   {
-                    title: 'Domino',
+                    title: 'Update',
                     id: 'Done_btn'
                   }]
                 });
