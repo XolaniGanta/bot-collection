@@ -3,6 +3,7 @@
 const router = require('express').Router();
 const WhatsappCloudAPI = require('whatsappcloudapi_wrapper');
 const {Sequelize, DataTypes} = require("sequelize");
+const { isValid } = require('./validation/IdValidation');
 
 const Whatsapp = new WhatsappCloudAPI({
     accessToken: process.env.Meta_WA_accessToken,
@@ -49,11 +50,9 @@ sequelize.authenticate()
         
     },
     {
-      
         createdAt: false,
         updatedAt: false,
         freezeTableName: true
-        
     }
     
   );
@@ -127,7 +126,7 @@ router.post('/webhook', async (req, res) => {
           } else if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
-            if (filterID !== null) {
+            if (isValid(filterID) !== null) {
               // Find all users with the specified identity number
               const users = await clientinfo.findAll({
                 where: {
@@ -138,7 +137,7 @@ router.post('/webhook', async (req, res) => {
           
               if (users && users.length > 0) {
                 // Map the users to their names and balances
-                const forma = users.map(clientinfo => `Please Confirm if these details are correct: \nFull Name:${clientinfo.name} ${clientinfo.surname} \nID Number:${clientinfo.idnumber} \nCell No:${clientinfo.cellno} \nBalance:${clientinfo.nettsalary}`);
+                const forma = users.map(clientinfo => `Please Confirm if these details are correct: \nName:${clientinfo.name} \nSurname:${clientinfo.surname} \nID Number:${clientinfo.idnumber} \nCell No:${clientinfo.cellno} \nBalance:${clientinfo.nettsalary}`);
           
                 // Send the message to the recipient
                 await Whatsapp.sendSimpleButtons({
@@ -157,8 +156,6 @@ router.post('/webhook', async (req, res) => {
               } 
             }
           }
-           
-        
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'correct_btn'){
