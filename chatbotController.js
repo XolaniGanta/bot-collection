@@ -145,11 +145,11 @@ router.post('/webhook', async (req, res) => {
                   message: (`${forma}`),
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
-                    title: 'Yes, they are correct',
+                    title: 'It is correct',
                     id: 'correct_btn'
                   },
                   {
-                    title: 'No, update',
+                    title: 'No,update',
                     id: 'update_btn'
                   }]
                 });
