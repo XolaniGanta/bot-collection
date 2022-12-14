@@ -129,6 +129,7 @@ router.post('/webhook', async (req, res) => {
             let filterID = incomingTextMessage.match(/^\d+$/); //detect numbers
           //  let count = incomingTextMessage.length;
           let dob = incomingTextMessage.substring(0,6);
+          console.log(dob);
           //  && count === 13 && isValidDate(dob)
             if (filterID!== null  && isValidDate(dob) ) {
               // Find all users with the specified identity number
@@ -156,7 +157,7 @@ router.post('/webhook', async (req, res) => {
                     id: 'update_btn'
                   }]
                 });
-                console.log(dob);
+              
               } 
             } else {
               await Whatsapp.sendText({
