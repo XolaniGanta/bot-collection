@@ -127,7 +127,7 @@ router.post('/webhook', async (req, res) => {
           } else if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //detect numbers
-           // let count = incomingTextMessage.length;
+            let count = incomingTextMessage.length;
           let dob = incomingTextMessage.substring(0,6);
           //  && count === 13 && isValidDate(dob)
             if (filterID!== null  && isValidDate(dob) ) {
@@ -158,7 +158,7 @@ router.post('/webhook', async (req, res) => {
                 });
                 
               } 
-            } else{
+            } else if (!isValidDate(dob) && count !== 13){
               await Whatsapp.sendText({
                 message: (`Seems your id is invalid`),
                 recipientPhone: recipientPhone
