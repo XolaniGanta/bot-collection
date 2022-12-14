@@ -3,7 +3,7 @@
 const router = require('express').Router();
 const WhatsappCloudAPI = require('whatsappcloudapi_wrapper');
 const {Sequelize, DataTypes} = require("sequelize");
-const { isValid } = require('./validation/IdValidation');
+import {isValid} from './validation/IdValidation';
 
 const Whatsapp = new WhatsappCloudAPI({
     accessToken: process.env.Meta_WA_accessToken,
