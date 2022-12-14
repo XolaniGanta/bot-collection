@@ -27,7 +27,7 @@ const dbURL = process.env.DB_HOST
      });
 
 
-async function getUserInfo(filterID) {
+
     const clientinfo = sequelize.define(
         "clientinfo",{
             idnumber:{ 
@@ -48,7 +48,7 @@ async function getUserInfo(filterID) {
         }
         
       );
-  
+ async function getUserInfo(filterID) {
     const users = await clientinfo.findAll({
       where: {
         idnumber: filterID
@@ -62,9 +62,10 @@ async function getUserInfo(filterID) {
   
       return forma;
     } else {
-      return null;
+        return null;
     }
-  }
+}
+  
   
   module.exports = {
     getUserInfo: getUserInfo,
