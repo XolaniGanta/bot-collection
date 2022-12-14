@@ -158,6 +158,11 @@ router.post('/webhook', async (req, res) => {
                 });
                 
               } 
+            } else{
+              await Whatsapp.sendText({
+                message: (`Seems your id is invalid`),
+                recipientPhone: recipientPhone
+              })
             }
           }
       if(typeOfMsg === 'simple_button_message'){
