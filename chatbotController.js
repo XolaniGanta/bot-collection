@@ -87,7 +87,7 @@ router.post('/webhook', async (req, res) => {
           //let dob = incomingTextMessage.substring(0,6);
     
           //  && count === 13 && isValidDate(dob)
-            if (filterID!== null  && count === 13) {
+            if (filterID === null  && count === 13) {
               // Find all users with the specified identity number
                const results = getUserInfo(filterID)
                 
