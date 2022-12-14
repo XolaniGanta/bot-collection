@@ -3,7 +3,7 @@
 const router = require('express').Router();
 const WhatsappCloudAPI = require('whatsappcloudapi_wrapper');
 const {Sequelize, DataTypes} = require("sequelize");
-const {isValid} = require('./Validation/IdValidation')
+
 
 const Whatsapp = new WhatsappCloudAPI({
     accessToken: process.env.Meta_WA_accessToken,
@@ -126,7 +126,7 @@ router.post('/webhook', async (req, res) => {
           } else if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers
-            if (isValid(filterID) !== null) {
+            if (filterID!== null) {
               // Find all users with the specified identity number
               const users = await clientinfo.findAll({
                 where: {
