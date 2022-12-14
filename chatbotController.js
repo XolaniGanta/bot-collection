@@ -156,7 +156,7 @@ router.post('/webhook', async (req, res) => {
                     id: 'update_btn'
                   }]
                 });
-                
+                console.log(dob);
               } 
             } else if (!isValidDate(dob) && count !== 13){
               await Whatsapp.sendText({
