@@ -3,7 +3,6 @@
 const router = require('express').Router();
 const WhatsappCloudAPI = require('whatsappcloudapi_wrapper');
 const {Sequelize, DataTypes} = require("sequelize");
-const paymentLink = 'https://instapay-sandbox.trustlinkhosting.com/index.php';
 
 const Whatsapp = new WhatsappCloudAPI({
     accessToken: process.env.Meta_WA_accessToken,
@@ -59,8 +58,6 @@ sequelize.authenticate()
     
   );
 
-  
-
   //check our application
   router.get("/", (req, res) => {
     res.status(200).send("Webhook working...");
@@ -91,7 +88,6 @@ router.get('/webhook', (req, res) => {
 });
 
 router.post('/webhook', async (req, res) => {
-
     try{
         let data = Whatsapp.parseMessage(req.body);
         console.log(JSON.stringify(data, null, 2));
@@ -102,16 +98,17 @@ router.post('/webhook', async (req, res) => {
             let recipientName = incomingMessage.from.name;
             let typeOfMsg = incomingMessage.type; // extract the type of message (some are text, others are images, others are responses to buttons etc...)
             let message_id = incomingMessage.message_id; // extract the message id
-
+        
+    
            if (typeOfMsg === 'text_message') {
               let incomingTextMessage = incomingMessage.text.body;
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
               if (filterID === null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName} Welcome to BestforU Self Service. To make payment simply click on Pay Now`,
+                  message: `Hey ${recipientName} Welcome to BestforU Self Service. Click the continue button to continue`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
-                      title: 'Pay Now',
+                      title: 'Continue',
                       id: 'pay_account'
                   }]
                 });
@@ -141,19 +138,19 @@ router.post('/webhook', async (req, res) => {
           
               if (users && users.length > 0) {
                 // Map the users to their names and balances
-                const forma = users.map(clientinfo => `Please Confirm if these details are correct: \nFull Name:${clientinfo.name} ${clientinfo.surname} \nEmail:${clientinfo.Email} \nCell No:${clientinfo.cellno} \nBalance:${clientinfo.nettsalary}`);
+                const forma = users.map(clientinfo => `Please Confirm if these details are correct: \nFull Name:${clientinfo.name} ${clientinfo.surname} \nID Number:${clientinfo.idnumber} \nCell No:${clientinfo.cellno} \nBalance:${clientinfo.nettsalary}`);
           
                 // Send the message to the recipient
                 await Whatsapp.sendSimpleButtons({
                   message: (`${forma}`),
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
-                    title: 'Confirm',
-                    id: 'settle_ac'
+                    title: 'Yes, they are correct',
+                    id: 'correct_btn'
                   },
                   {
-                    title: 'Update',
-                    id: 'Done_btn'
+                    title: 'No, update',
+                    id: 'update_btn'
                   }]
                 });
                 
@@ -164,10 +161,14 @@ router.post('/webhook', async (req, res) => {
         
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
-        if (buttonID === 'settle_ac'){
-            await Whatsapp.sendText({
-              message: paymentLink,
-              recipientPhone: recipientPhone
+        if (buttonID === 'correct_btn'){
+            await Whatsapp.sendSimpleButtons({
+              message: `If you wish to recieve an invoice please enter your email`,
+              recipientPhone: recipientPhone,
+              listOfButtons: [{
+                title: 'Skip for Now',
+                id: 'skip_btn'
+              }]
             })
         }
     }
