@@ -18,11 +18,55 @@ const Whatsapp = new WhatsappCloudAPI({
   router.get("/", (req, res) => {
     res.status(200).send("Webhook working...");
 });
+//Database variables
+const dbName = process.env.DB_NAME;
+const dbUsername = process.env.DB_USERNAME
+const dbPassword = process.env.DB_PASSWORD
+const dbURL = process.env.DB_HOST
 
+//create database connection
+  const sequelize = new Sequelize(
+      dbName,
+      dbUsername,
+      dbPassword,
+       {
+         host: dbURL,
+         dialect: 'mysql'
+       }
+     );
+
+  sequelize.authenticate()
+     .then(() => {
+       console.log('Connection has been established successfully.');
+     })
+     .catch(err => {
+       console.error('Unable to connect to the database:', err);
+     });
+
+    const clientinfo = sequelize.define(
+        "clientinfo",{
+            idnumber:{ 
+              type: DataTypes.TEXT,
+              primaryKey: true
+            },
+            name:DataTypes.TEXT,
+            surname:DataTypes.TEXT,
+            Email:DataTypes.TEXT,
+            nettsalary:DataTypes.TEXT,
+            cellno:DataTypes.TEXT
+            
+        },
+        {
+            createdAt: false,
+            updatedAt: false,
+            freezeTableName: true
+        }
+        
+      );
 //Verifying the token 
 router.get('/webhook', (req, res) => {
     try {
-        console.log('Doing a get request!');
+        console.log('Getting a request!');
         let mode = req.query['hub.mode'];
         let token = req.query['hub.verify_token'];
         let challenge = req.query['hub.challenge'];
@@ -85,28 +129,37 @@ router.post('/webhook', async (req, res) => {
             let filterID = incomingTextMessage.match(/^\d+$/); //detect numbers
             let count = incomingTextMessage.length;
           //let dob = incomingTextMessage.substring(0,6);
-    
           //  && count === 13 && isValidDate(dob)
-            if (filterID === null  && count === 13) {
-              // Find all users with the specified identity number
-               const results = getUserInfo(filterID)
-                
-                await Whatsapp.sendSimpleButtons({
-                  message: results,
-                  recipientPhone: recipientPhone,
-                  listOfButtons: [{
-                    title: 'It is correct',
-                    id: 'correct_btn'
-                  },
-                  {
-                    title: 'No,update',
-                    id: 'update_btn'
-                  }]
-                });
+           if (filterID === null  && count === 13) {
+            // Find all users with the specified identity number
+            const users = await clientinfo.findAll({
+              where: {
+                idnumber: filterID
+              },
+              limit: 5
+            });
+            if (users && users.length > 0) {
+             // Map the users to their names and balances
+              const forma = users.map(clientinfo => `Please Confirm if these details are correct: \nName:${clientinfo.name} \nSurname:${clientinfo.surname} \nID Number:${clientinfo.idnumber} \nCell No:${clientinfo.cellno} \nBalance:${clientinfo.nettsalary}`);
+
+              await Whatsapp.sendSimpleButtons({
+                message: (`${forma}`),
+                recipientPhone: recipientPhone,
+                listOfButtons: [{
+                  title: 'It is correct',
+                  id: 'correct_btn'
+                },
+                {
+                  title: 'No,update',
+                  id: 'update_btn'
+                }]
+              });
+            
+            } 
+           
+        }
+            } 
               
-              } 
-             
-          }
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'correct_btn'){
@@ -120,8 +173,8 @@ router.post('/webhook', async (req, res) => {
             })
         }
     }
-          
-    }
+
+    }                      
     return res.sendStatus(200);
 } catch (error) {
     console.error({ error })
