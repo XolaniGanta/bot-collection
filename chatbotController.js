@@ -166,7 +166,7 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\nPlease follow this URL: https://0e0c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
+              message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\nPlease follow this URL: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
               recipientPhone: recipientPhone,
             })
         }
@@ -176,7 +176,7 @@ router.post('/webhook', async (req, res) => {
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'pay_account'){
           await Whatsapp.sendText({
-            message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\nPlease follow this URL: https://0e0c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
+            message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\nPlease follow this URL: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
             recipientPhone: recipientPhone,
           })
       }
