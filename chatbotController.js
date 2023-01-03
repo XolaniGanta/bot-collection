@@ -3,9 +3,6 @@
 const router = require('express').Router();
 const WhatsappCloudAPI = require('whatsappcloudapi_wrapper');
 const {Sequelize, DataTypes} = require("sequelize");
-const isValidDate = require('is-valid-date');
-const {getUserInfo} = require('./Database/dbConnection')
-
 
 const Whatsapp = new WhatsappCloudAPI({
     accessToken: process.env.Meta_WA_accessToken,
@@ -19,7 +16,7 @@ const Whatsapp = new WhatsappCloudAPI({
     res.status(200).send("Webhook working...");
 });
 //Database variables
-const dbName = process.env.DB_NAME;
+const dbName = process.env.DB_NAME;  
 const dbUsername = process.env.DB_USERNAME
 const dbPassword = process.env.DB_PASSWORD
 const dbURL = process.env.DB_HOST
@@ -105,19 +102,23 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
               if (filterID === null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName} Welcome to BestforU Self Service. Click the continue button to continue`,
+                  message: `Hey ${recipientName} Welcome to BestforU Self-Service - the safe,easy way to pay and check balance on your account.\n Lets get started...\n Choose an option below `,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
-                      title: 'Continue',
+                      title: 'Pay my Account',
                       id: 'pay_account'
-                  }]
+                  },{
+                      title: 'Check Balance',
+                      id: 'check_balance'
+                  }
+                ]
                 });
               }
           }
          
      if (typeOfMsg === 'simple_button_message') {
             let buttonID = incomingMessage.button_reply.id;
-            if (buttonID === 'pay_account') {
+            if (buttonID === 'check_balance') {
               await Whatsapp.sendText({
                 message: `For security reasons please enter your id number.  `,
                 recipientPhone: recipientPhone
@@ -140,18 +141,18 @@ router.post('/webhook', async (req, res) => {
             });
             if (users && users.length > 0) {
              // Map the users to their names and balances
-              const forma = users.map(clientinfo => `Please Confirm if these details are correct: \nName:${clientinfo.name} \nSurname:${clientinfo.surname} \nID Number:${clientinfo.idnumber} \nCell No:${clientinfo.cellno} \nBalance:${clientinfo.nettsalary}`);
+              const forma = users.map(clientinfo => `${clientinfo.name} ${clientinfo.surname} your current balance is: \nBalance:${clientinfo.nettsalary}`);
 
               await Whatsapp.sendSimpleButtons({
                 message: (`${forma}`),
                 recipientPhone: recipientPhone,
                 listOfButtons: [{
-                  title: 'It is correct',
-                  id: 'correct_btn'
+                  title: 'Continue Pay account',
+                  id: 'continue_btn'
                 },
                 {
-                  title: 'No,update',
-                  id: 'update_btn'
+                  title: 'Done',
+                  id: 'Done_btn'
                 }]
               });
             
@@ -162,14 +163,10 @@ router.post('/webhook', async (req, res) => {
               
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
-        if (buttonID === 'correct_btn'){
-            await Whatsapp.sendSimpleButtons({
-              message: `If you wish to recieve an invoice please enter your email`,
+        if (buttonID === 'continue_btn' || 'pay_account'){
+            await Whatsapp.sendText({
+              message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\n Please follow this URL: https://0e0c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
               recipientPhone: recipientPhone,
-              listOfButtons: [{
-                title: 'Skip for Now',
-                id: 'skip_btn'
-              }]
             })
         }
     }
