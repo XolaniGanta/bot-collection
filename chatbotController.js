@@ -102,7 +102,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
               if (filterID === null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName} Welcome to BestforU Self-Service - the safe,easy way to pay and check balance on your account.\n Lets get started...\n Choose an option below `,
+                  message: `Hey ${recipientName} Welcome to BestforU Self-Service - the safe,easy way to pay and check balance on your account.\n\n\nLets get started...\n\n\n Choose an option below `,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay my Account',
@@ -163,7 +163,7 @@ router.post('/webhook', async (req, res) => {
               
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
-        if (buttonID === 'continue_btn' || 'pay_account'){
+        if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
               message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\n Please follow this URL: https://0e0c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
               recipientPhone: recipientPhone,
