@@ -102,7 +102,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
               if (filterID === null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName} Welcome\n\n To BestforU Self-Service - the safe,easy way to pay and check balance on your account.\n\nLets get started...\n\n Choose an option below `,
+                  message: `Hey ${recipientName} Welcome\n\nTo BestforU Self-Service - the safe,easy way to pay and check balance on your account.\n\nLets get started...\n\n Choose an option below `,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay my Account',
@@ -125,7 +125,8 @@ router.post('/webhook', async (req, res) => {
               });
             }
            
-          } else if (typeOfMsg === 'text_message') {
+          } 
+      if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //detect numbers
             let count = incomingTextMessage.length;
@@ -165,7 +166,7 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\n Please follow this URL: https://0e0c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
+              message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\nPlease follow this URL: https://0e0c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
               recipientPhone: recipientPhone,
             })
         }
@@ -175,7 +176,7 @@ router.post('/webhook', async (req, res) => {
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'pay_account'){
           await Whatsapp.sendText({
-            message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\n Please follow this URL: https://0e0c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
+            message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\nPlease follow this URL: https://0e0c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
             recipientPhone: recipientPhone,
           })
       }
