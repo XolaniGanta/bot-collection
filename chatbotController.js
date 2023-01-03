@@ -142,7 +142,7 @@ router.post('/webhook', async (req, res) => {
             });
             if (users && users.length > 0) {
              // Map the users to their names and balances
-              const forma = users.map(clientinfo => `${clientinfo.name} ${clientinfo.surname} your current balance is: \nBalance:R`);
+              const forma = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary} `);
 
               await Whatsapp.sendSimpleButtons({
                 message: (`${forma}`),
