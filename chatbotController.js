@@ -141,7 +141,7 @@ router.post('/webhook', async (req, res) => {
             });
             if (users && users.length > 0) {
              // Map the users to their names and balances
-              const forma = users.map(clientinfo => `${clientinfo.name} ${clientinfo.surname} your current balance is: \nBalance:${clientinfo.nettsalary}`);
+              const forma = users.map(clientinfo => `${clientinfo.name} ${clientinfo.surname} your current balance is: \nBalance:R`);
 
               await Whatsapp.sendSimpleButtons({
                 message: (`${forma}`),
@@ -170,6 +170,16 @@ router.post('/webhook', async (req, res) => {
             })
         }
     }
+
+    if(typeOfMsg === 'simple_button_message'){
+      let buttonID = incomingMessage.button_reply.id;
+      if (buttonID === 'pay_account'){
+          await Whatsapp.sendText({
+            message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\n Please follow this URL: https://0e0c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
+            recipientPhone: recipientPhone,
+          })
+      }
+  }
 
     }                      
     return res.sendStatus(200);
