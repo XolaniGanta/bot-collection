@@ -130,19 +130,15 @@ router.post('/webhook', async (req, res) => {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //detect numbers
             let count = incomingTextMessage.length;
-          //let dob = incomingTextMessage.substring(0,6);
-          //  && count === 13 && isValidDate(dob)
            if (filterID !== null  && count === 13) {
-            // Find all users with the specified identity number
             const users = await clientinfo.findAll({
               where: {
                 idnumber: filterID
               },
               limit: 5
             });
-            if (users && users.length > 0) {
-             // Map the users to their names and balances
-              const forma = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary} `);
+        if (users && users.length > 0) {
+            const forma = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary} `);
 
               await Whatsapp.sendSimpleButtons({
                 message: (`${forma}`),
@@ -158,7 +154,6 @@ router.post('/webhook', async (req, res) => {
               });
             
             } else {
-              // Execute this code if the user does not exist in the database
               await Whatsapp.sendText({
                 message: 'Sorry, we could not find a user with that ID number in our database.',
                 recipientPhone: recipientPhone
@@ -167,7 +162,7 @@ router.post('/webhook', async (req, res) => {
             
         } else if(filterID !== null && count !== 13) {
           await Whatsapp.sendText({
-            message:'It seems you have entered wrong id number, Please re-enter your id number',
+            message:'It seems you have entered a wrong id number, Please check and re-enter your id number',
             recipientPhone: recipientPhone
           });
         } 
@@ -177,7 +172,7 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
+              message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL to make your payment now: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
               recipientPhone: recipientPhone,
             })
         }
@@ -187,7 +182,7 @@ router.post('/webhook', async (req, res) => {
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'pay_account'){
           await Whatsapp.sendText({
-            message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
+            message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL to make your payment now: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
             recipientPhone: recipientPhone,
           })
       }
