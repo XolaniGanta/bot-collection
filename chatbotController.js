@@ -195,9 +195,11 @@ router.post('/webhook', async (req, res) => {
           recipientPhone: recipientPhone,
         })
     }
-}
-
-    }                      
+} 
+    await Whatsapp.markMessageAsRead({
+      message_id,
+});
+ }                      
     return res.sendStatus(200);
 } catch (error) {
     console.error({ error })
