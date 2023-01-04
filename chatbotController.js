@@ -158,13 +158,13 @@ router.post('/webhook', async (req, res) => {
               });
             
             } 
-        }
-            }else{
-              await Whatsapp.sendText({
-                message:'It seems you have entered wrong id number, try again please',
-                recipientPhone: recipientPhone
-              });
-            } 
+        } else if(count !== 13){
+          await Whatsapp.sendText({
+            message:'It seems you have entered wrong id number, try again please',
+            recipientPhone: recipientPhone
+          });
+        } 
+            }
               
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
