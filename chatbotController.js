@@ -102,7 +102,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
               if (filterID === null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName}\n\n Welcome To BestforU Self-Service - the safe,easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below `,
+                  message: `Hey ${recipientName}\n\nWelcome To BestforU Self-Service - the safe,easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below `,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay my Account',
@@ -158,7 +158,7 @@ router.post('/webhook', async (req, res) => {
               });
             
             } 
-        } else {
+        } else if(filterID !== null && count !== 13) {
           await Whatsapp.sendText({
             message:'It seems you have entered wrong id number, try again please',
             recipientPhone: recipientPhone
