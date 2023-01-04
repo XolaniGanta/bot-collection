@@ -126,7 +126,7 @@ router.post('/webhook', async (req, res) => {
             }
            
           } 
-     else if (typeOfMsg === 'text_message') {
+    if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //detect numbers
             let count = incomingTextMessage.length;
@@ -158,15 +158,19 @@ router.post('/webhook', async (req, res) => {
               });
             
             } 
-           
         }
+            }else{
+              await Whatsapp.sendText({
+                message:'It seems you have entered wrong id number, try again please',
+                recipientPhone: recipientPhone
+              });
             } 
               
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\nPlease follow this URL: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
+              message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
               recipientPhone: recipientPhone,
             })
         }
@@ -176,11 +180,20 @@ router.post('/webhook', async (req, res) => {
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'pay_account'){
           await Whatsapp.sendText({
-            message: `Please note you will be redirected outside WhatsApp to perfom your transcation.\nPlease follow this URL: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
+            message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL: https://0f3a-196-41-98-206.sa.ngrok.io/trustlink_integration/checkout.php`,
             recipientPhone: recipientPhone,
           })
       }
-  }
+  } 
+  if(typeOfMsg === 'simple_button_message'){
+    let buttonID = incomingMessage.button_reply.id;
+    if (buttonID === 'Done_btn'){
+        await Whatsapp.sendText({
+          message: `Thank you for contacting BestForU.\n\nPlease make sure you have settle your account.\n\nCheers have a good day`,
+          recipientPhone: recipientPhone,
+        })
+    }
+}
 
     }                      
     return res.sendStatus(200);
