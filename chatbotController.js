@@ -157,10 +157,17 @@ router.post('/webhook', async (req, res) => {
                 }]
               });
             
-            } 
+            } else {
+              // Execute this code if the user does not exist in the database
+              await Whatsapp.sendText({
+                message: 'Sorry, we could not find a user with that ID number in our database.',
+                recipientPhone: recipientPhone
+              });
+            }
+            
         } else if(filterID !== null && count !== 13) {
           await Whatsapp.sendText({
-            message:'It seems you have entered wrong id number, try again please',
+            message:'It seems you have entered wrong id number, Please re-enter your id number',
             recipientPhone: recipientPhone
           });
         } 
