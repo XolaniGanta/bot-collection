@@ -101,10 +101,10 @@ router.post('/webhook', async (req, res) => {
     
            if (typeOfMsg === 'text_message') {
               let incomingTextMessage = incomingMessage.text.body;
-              let filterID = incomingTextMessage.match(/^\d+$/); //if it has numbers 
-              if (filterID === null) {
+              let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); //if its only letters
+              if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName}\n\nWelcome To BestforU Self-Service - the safe,easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below `,
+                  message: `Hey ${recipientName}\n\nWelcome To BestforU Self-Service - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below\n\nShortcut: If you need help reply with * to chat with an agent`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay my Account',
@@ -112,14 +112,25 @@ router.post('/webhook', async (req, res) => {
                   },{
                       title: 'Check Balance',
                       id: 'check_balance'
-                  },{
-                    title: 'Live Agent',
-                    id: 'live_agent'
                   }
                 ]
                 });
               }
           }
+          if (typeOfMsg === 'text_message') {
+            let incomingTextMessage = incomingMessage.text.body;
+            let filterAgent = incomingTextMessage;
+            if(filterAgent === '*'){
+              await Whatsapp.sendSimpleButtons({
+                message: `Click the below button an agent will be in contact with you in few minutes `,
+                recipientPhone: recipientPhone,
+                listOfButtons:[{
+                  title: 'Live Agent',
+                  id: 'live_agent'
+                }]
+              });
+          } 
+        }
      if (typeOfMsg === 'simple_button_message') {
             let buttonID = incomingMessage.button_reply.id;
             if (buttonID === 'check_balance') {
