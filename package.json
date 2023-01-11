@@ -10,6 +10,7 @@
   "author": "Xolani Ganta",
   "license": "ISC",
   "dependencies": {
+    "@slack/web-api": "^6.8.0",
     "axios": "^1.2.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

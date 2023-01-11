@@ -3,6 +3,10 @@
 const router = require('express').Router();
 const WhatsappCloudAPI = require('whatsappcloudapi_wrapper');
 const {Sequelize, DataTypes} = require("sequelize");
+const { WebClient } = require('@slack/web-api');
+
+const slackToken = process.env.SLACK_BOT_TOKEN;
+const slack = new WebClient(slackToken);
 
 const Whatsapp = new WhatsappCloudAPI({
     accessToken: process.env.Meta_WA_accessToken,
@@ -108,6 +112,9 @@ router.post('/webhook', async (req, res) => {
                   },{
                       title: 'Check Balance',
                       id: 'check_balance'
+                  },{
+                    title: 'Live Agent',
+                    id: 'live_agent'
                   }
                 ]
                 });
@@ -183,6 +190,24 @@ router.post('/webhook', async (req, res) => {
           })
       }
   } 
+  if(typeOfMsg === 'simple_button_message'){
+    let buttonID = incomingMessage.button_reply.id;
+    if (buttonID === 'pay_account'){
+        await Whatsapp.sendText({
+          message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL: https://ab8c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
+          recipientPhone: recipientPhone,
+        })
+    }
+} 
+ if(typeOfMsg === 'simple_button_message'){
+  let buttonID = incomingMessage.button_reply.id;
+  if (buttonID === 'live_agent'){
+     await slack.chat.postMessage({
+      channel: '#general',
+      text: 'A user has requested a transfer to a live agent. Please log in to the chatbot to take the chat.'
+  });
+  }
+} 
   if(typeOfMsg === 'simple_button_message'){
     let buttonID = incomingMessage.button_reply.id;
     if (buttonID === 'Done_btn'){
