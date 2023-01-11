@@ -104,7 +104,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); //if its only letters
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName}\n\nWelcome To BestforU Self-Service - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below\n\nShortcut: If you need help reply with * to chat with an agent`,
+                  message: `Hey ${recipientName}\n\nWelcome To BestforU Self-Service - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below\n\nSHORTCUT: If you need help reply with # to chat with an agent`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay my Account',
@@ -120,7 +120,7 @@ router.post('/webhook', async (req, res) => {
           if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterAgent = incomingTextMessage;
-            if(filterAgent === '*'){
+            if(filterAgent === '#'){
               await Whatsapp.sendSimpleButtons({
                 message: `Click the below button an agent will be in contact with you in few minutes `,
                 recipientPhone: recipientPhone,
@@ -215,7 +215,7 @@ router.post('/webhook', async (req, res) => {
   if (buttonID === 'live_agent'){
      await slack.chat.postMessage({
       channel: '#general',
-      text: 'A user has requested a transfer to a live agent. Please log in to the chatbot to take the chat.'
+      text: `A user has requested a transfer to a live agent. User number: ${recipientPhone}.`
   });
   }
 } 
