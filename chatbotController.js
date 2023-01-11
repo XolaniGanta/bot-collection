@@ -10,11 +10,11 @@ const Whatsapp = new WhatsappCloudAPI({
     WABA_ID: process.env.Meta_WA_wabaId,
     graphAPIVersion: 'v15.0'
 });
-
   //check our application
   router.get("/", (req, res) => {
     res.status(200).send("Webhook working...");
 });
+
 //Database variables
 const dbName = process.env.DB_NAME;  
 const dbUsername = process.env.DB_USERNAME
@@ -31,7 +31,6 @@ const dbURL = process.env.DB_HOST
          dialect: 'mysql'
        }
      );
-
   sequelize.authenticate()
      .then(() => {
        console.log('Connection has been established successfully.');
@@ -51,19 +50,17 @@ const dbURL = process.env.DB_HOST
             Email:DataTypes.TEXT,
             nettsalary:DataTypes.TEXT,
             cellno:DataTypes.TEXT
-            
         },
         {
             createdAt: false,
             updatedAt: false,
             freezeTableName: true
         }
-        
       );
+
 //Verifying the token 
 router.get('/webhook', (req, res) => {
     try {
-        console.log('Getting a request!');
         let mode = req.query['hub.mode'];
         let token = req.query['hub.verify_token'];
         let challenge = req.query['hub.challenge'];
@@ -84,6 +81,7 @@ router.get('/webhook', (req, res) => {
     }
 });
 
+//listening to events 
 router.post('/webhook', async (req, res) => {
     try{
         let data = Whatsapp.parseMessage(req.body);
@@ -115,7 +113,6 @@ router.post('/webhook', async (req, res) => {
                 });
               }
           }
-         
      if (typeOfMsg === 'simple_button_message') {
             let buttonID = incomingMessage.button_reply.id;
             if (buttonID === 'check_balance') {
@@ -137,11 +134,11 @@ router.post('/webhook', async (req, res) => {
               },
               limit: 5
             });
-        if (users && users.length > 0) {
-            const forma = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary} `);
 
+        if (users && users.length > 0) {
+            const userData = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary}`);
               await Whatsapp.sendSimpleButtons({
-                message: (`${forma}`),
+                message: (`${userData}`),
                 recipientPhone: recipientPhone,
                 listOfButtons: [{
                   title: 'Continue Pay account',
@@ -176,8 +173,7 @@ router.post('/webhook', async (req, res) => {
               recipientPhone: recipientPhone,
             })
         }
-    }
-
+    }                 
     if(typeOfMsg === 'simple_button_message'){
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'pay_account'){
@@ -196,7 +192,7 @@ router.post('/webhook', async (req, res) => {
         })
     }
 } 
-    await Whatsapp.markMessageAsRead({
+await Whatsapp.markMessageAsRead({
       message_id,
 });
  }                      
