@@ -168,7 +168,6 @@ router.post('/webhook', async (req, res) => {
                   id: 'Done_btn'
                 }]
               });
-            
             } else {
               await Whatsapp.sendText({
                 message: 'Sorry, we could not find a user with that ID number in our database.',
@@ -216,7 +215,21 @@ router.post('/webhook', async (req, res) => {
   if (buttonID === 'live_agent'){
      await slack.chat.postMessage({
       channel: '#general',
-      text: `A user has requested a transfer to a live agent. User number: ${recipientPhone}.`
+      text: `A user has requested a transfer to a live agent. User number: ${recipientPhone}.`,
+      attachments: [
+        {
+          text: "Ticket status",
+          callback_id: "transfer_agent",
+           actions: [
+            {
+              name: "transfer",
+              type: "button",
+              text: "Solve me",
+              value: "transfer"
+            }
+          ]
+        
+     }]
   });
   }
 } 
