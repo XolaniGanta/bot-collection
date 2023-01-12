@@ -6,6 +6,7 @@ const {Sequelize, DataTypes} = require("sequelize");
 const { WebClient } = require('@slack/web-api');
 const { emoji } = require('node-emoji');
 
+const useEmoji = new emoji();
 
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slack = new WebClient(slackToken);
@@ -106,7 +107,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); //if its only letters
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName}\n\nWelcome To BestforU Self-Service - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below\n\nShortcut ${emoji.emojify(':bulb:')}: If you need help reply with # to chat with an agent`,
+                  message: `Hey ${recipientName}\n\nWelcome To BestforU Self-Service - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below\n\nShortcut ${useEmoji.emojify(':bulb:')}: If you need help reply with # to chat with an agent`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay my Account',
