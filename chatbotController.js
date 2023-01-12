@@ -6,7 +6,7 @@ const {Sequelize, DataTypes} = require("sequelize");
 const { WebClient } = require('@slack/web-api');
 const { emoji } = require('node-emoji');
 
-const useEmoji = new emoji();
+const useEmoji = new emoji;
 
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slack = new WebClient(slackToken);
