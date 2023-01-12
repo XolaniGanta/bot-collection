@@ -19,6 +19,7 @@
     "https": "^1.0.0",
     "is-valid-date": "^0.0.1",
     "mysql2": "^2.3.3",
+    "node-emoji": "^1.11.0",
     "request": "^2.88.2",
     "sequelize": "^6.26.0",
     "whatsappcloudapi_wrapper": "^1.0.13"
