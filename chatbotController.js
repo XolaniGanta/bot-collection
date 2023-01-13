@@ -4,8 +4,10 @@ const router = require('express').Router();
 const WhatsappCloudAPI = require('whatsappcloudapi_wrapper');
 const {Sequelize, DataTypes} = require("sequelize");
 const { WebClient } = require('@slack/web-api');
-const {emoji} = require('node-emoji');
+const emoji = require('node-emoji');
 
+
+//Enter slack token to gain Access to Slack API
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slack = new WebClient(slackToken);
 
@@ -105,7 +107,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); //if its only letters
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hey ${recipientName}\n\nWelcome To BestforU Self-Service - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below\n\nShortcut: If you need help reply with # to chat with an agent`,
+                  message: `Hey ${recipientName}\n\nWelcome To BestforU Self-Service - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose any option below\n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay my Account',
@@ -123,7 +125,7 @@ router.post('/webhook', async (req, res) => {
             let filterAgent = incomingTextMessage;
              if(filterAgent === '#'){
               await Whatsapp.sendSimpleButtons({
-                message: `Click the below button an agent will be in contact with you in few minutes `,
+                message: `Click the button below and an agent will be in contact with you shortly.`,
                 recipientPhone: recipientPhone,
                 listOfButtons:[{
                   title: 'Live Agent',
@@ -153,8 +155,7 @@ router.post('/webhook', async (req, res) => {
               },
               limit: 5
             });
-
-        if (users && users.length > 0) {
+         if (users && users.length > 0) {
             const userData = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary}`);
               await Whatsapp.sendSimpleButtons({
                 message: (`${userData}`),
