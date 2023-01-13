@@ -107,7 +107,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); //if its only letters
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hi`+emoji.get(':wave:')+ `Welcome to Money Pay, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose an option below and click a button for what you'd like to do\n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
+                  message: `Hi `+emoji.get(':wave:')+ ` Welcome to Money Pay, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose an option below and click a button for what you'd like to do\n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay my Account',
