@@ -25,11 +25,12 @@ const Whatsapp = new WhatsappCloudAPI({
 
 //Database variables
 const dbName = process.env.DB_NAME;  
-const dbUsername = process.env.DB_USERNAME
-const dbPassword = process.env.DB_PASSWORD
-const dbURL = process.env.DB_HOST
+const dbName1 = process.env.DB_NAME1;
+const dbUsername = process.env.DB_USERNAME;
+const dbPassword = process.env.DB_PASSWORD;
+const dbURL = process.env.DB_HOST;
 
-//create database connection
+//create database1 connection
   const sequelize = new Sequelize(
       dbName,
       dbUsername,
@@ -41,12 +42,12 @@ const dbURL = process.env.DB_HOST
      );
   sequelize.authenticate()
      .then(() => {
-       console.log('Connection has been established successfully.');
+       console.log('Connection to database 1 has been established successfully.');
      })
      .catch(err => {
        console.error('Unable to connect to the database:', err);
      });
-
+//client details databases instance
     const clientinfo = sequelize.define(
         "clientinfo",{
             idnumber:{ 
@@ -65,6 +66,56 @@ const dbURL = process.env.DB_HOST
             freezeTableName: true
         }
       );
+
+//create database2 connection
+  const seq = new Sequelize(
+    dbName1,
+    dbUsername,
+    dbPassword,
+     {
+       host: dbURL,
+       dialect: 'mysql'
+     }
+   );
+seq.authenticate()
+   .then(() => {
+     console.log('Connection to database 2 has been established successfully.');
+   })
+   .catch(err => {
+     console.error('Unable to connect to the database:', err);
+   });
+  
+  //balance database instance 
+  const balances_temp = seq.define(
+      "balances_temp",{
+        settlement_value: DataTypes.TEXT
+      },
+      {
+        createdAt: false,
+        updatedAt: false,
+        freezeTableName: true
+    }
+  );
+
+  //junction table
+  const daps_rubix = sequelize.define(
+    "daps_rubix",{
+      DAPS_AGREEMENT:{ 
+        type: DataTypes.TEXT,
+        primaryKey: true
+      },
+      contract_key: DataTypes.TEXT
+    },
+    {
+      createdAt: false,
+      updatedAt: false,
+      freezeTableName: true
+  }
+);
+// create association
+clientinfo.belongsTo(daps_rubix, { foreignKey: 'dapsagreementnumber' });
+daps_rubix.hasOne(balances_temp, { foreignKey: 'contract_key' });
+
 
 //Verifying the token 
 router.get('/webhook', (req, res) => {
@@ -108,7 +159,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); //if its only letters
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hi `+emoji.get(':wave:')+ ` Welcome to Money Pay, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nLets get started...`+bolds.bold('\n\nChoose an option below and click a button for what you like to do')+`\n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
+                  message: `Hi `+emoji.get(':wave:')+ ` Welcome to Money Pay, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose an option below and click a button for what you'd like to do\n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Pay my Account',
@@ -119,7 +170,6 @@ router.post('/webhook', async (req, res) => {
                   }
                 ]
                 });
-               
               }
           }
           if (typeOfMsg === 'text_message') {
@@ -152,13 +202,21 @@ router.post('/webhook', async (req, res) => {
             let count = incomingTextMessage.length;
            if (filterID !== null  && count === 13) {
             const users = await clientinfo.findAll({
+              include:[{
+                model:daps_rubix,
+                required:true,
+                include:[{
+                  model:balances_temp,
+                  required:true
+                }]
+              }],
               where: {
                 idnumber: filterID
               },
               limit: 5
             });
          if (users && users.length > 0) {
-            const userData = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary}`);
+            const userData = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.daps_rubix.balances_temp.settlement_value}`);
               await Whatsapp.sendSimpleButtons({
                 message: (`${userData}`),
                 recipientPhone: recipientPhone,
@@ -180,7 +238,7 @@ router.post('/webhook', async (req, res) => {
             
         } else if(filterID !== null && count !== 13) {
           await Whatsapp.sendText({
-            message:'It seems you have entered a wrong id number, Please check and re-enter your id number',
+            message:'Oops! it seems you have entered a wrong id number, Please check and re-enter your id number',
             recipientPhone: recipientPhone
           });
         } 
