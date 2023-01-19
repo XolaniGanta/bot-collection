@@ -169,7 +169,7 @@ router.post('/webhook', async (req, res) => {
               });
             } else {
               await Whatsapp.sendText({
-                message: 'Sorry, we could not find a user with that ID number in our database.',
+                message:emoji.get(':pensive:')+ 'Sorry, we could not find a user with that ID number in our database.',
                 recipientPhone: recipientPhone
               });
             }
@@ -186,7 +186,7 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL to make your payment now: https://ab8c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
+              message: emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL to make your payment now: https://d228-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
               recipientPhone: recipientPhone,
             })
         }
