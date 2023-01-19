@@ -108,13 +108,10 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); //if its only letters
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hi `+emoji.get(':wave:')+ ` Welcome to Money Pay, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nLets get started...\n\nChoose an option below and click a button for what you'd like to do\n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
+                  message: `Hi `+emoji.get(':wave:')+ ` Welcome to Money Pay, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nClick the below button to get started \n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent \n\nPlease note this is only valid for 24 hours`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
-                      title: 'Pay my Account',
-                      id: 'pay_account'
-                  },{
-                      title: 'Check Balance',
+                      title: 'Get Started',
                       id: 'check_balance'
                   }
                 ]
@@ -139,7 +136,7 @@ router.post('/webhook', async (req, res) => {
             let buttonID = incomingMessage.button_reply.id;
             if (buttonID === 'check_balance') {
               await Whatsapp.sendText({
-                message: `For security reasons please enter your id number.  `,
+                message: emoji.get(':exclamation:')+`In order to continue you are required to enter your id number.`,
                 recipientPhone: recipientPhone
               });
             }
@@ -166,7 +163,7 @@ router.post('/webhook', async (req, res) => {
                   id: 'continue_btn'
                 },
                 {
-                  title: 'Done',
+                  title: 'Cancel',
                   id: 'Done_btn'
                 }]
               });
@@ -179,7 +176,7 @@ router.post('/webhook', async (req, res) => {
             
         } else if(filterID !== null && count !== 13) {
           await Whatsapp.sendText({
-            message:'Oops! it seems you have entered a wrong id number, Please check and re-enter your id number',
+            message:emoji.get(':grimacing:')+'Oops! it seems you have entered a wrong id number, Please check and re-enter your id number',
             recipientPhone: recipientPhone
           });
         } 
@@ -189,29 +186,11 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL to make your payment now: https://ab8c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
+              message: emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL to make your payment now: https://ab8c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
               recipientPhone: recipientPhone,
             })
         }
     }                 
-    if(typeOfMsg === 'simple_button_message'){
-      let buttonID = incomingMessage.button_reply.id;
-      if (buttonID === 'pay_account'){
-          await Whatsapp.sendText({
-            message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL: https://ab8c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
-            recipientPhone: recipientPhone,
-          })
-      }
-  } 
-  if(typeOfMsg === 'simple_button_message'){
-    let buttonID = incomingMessage.button_reply.id;
-    if (buttonID === 'pay_account'){
-        await Whatsapp.sendText({
-          message: `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL: https://ab8c-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php`,
-          recipientPhone: recipientPhone,
-        })
-    }
-} 
  if(typeOfMsg === 'simple_button_message'){
   let buttonID = incomingMessage.button_reply.id;
   if (buttonID === 'live_agent'){
@@ -239,12 +218,12 @@ router.post('/webhook', async (req, res) => {
     let buttonID = incomingMessage.button_reply.id;
     if (buttonID === 'Done_btn'){
         await Whatsapp.sendText({
-          message: `Thank you for contacting BestForU.\n\nPlease make sure you have settle your account.\n\nCheers have a good day`,
+          message: `Sad to see you going.\n\nPlease make sure you have settle your account.\n\nCheers have a good day`+emoji.get(':wave:'),
           recipientPhone: recipientPhone,
         })
     }
 } 
-await Whatsapp.markMessageAsRead({
+    await Whatsapp.markMessageAsRead({
       message_id,
 });
  }                      
