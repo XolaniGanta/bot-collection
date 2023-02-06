@@ -1,12 +1,11 @@
 'use strict';
-const dotenv = require('dotenv');
+
 const router = require('express').Router();
 const WhatsappCloudAPI = require('whatsappcloudapi_wrapper');
 const {Sequelize, DataTypes} = require("sequelize");
 const { WebClient } = require('@slack/web-api');
 const emoji = require('node-emoji');
 const bolds = require('node-strings');
-dotenv.config();
 
 
 //Enter slack token to gain Access to Slack API
@@ -25,29 +24,11 @@ const Whatsapp = new WhatsappCloudAPI({
 });
 
 //Database variables
-const dbName = process.env.DbName; 
-const Db = process.env.DbName1; 
-const dbUsername = process.env.DbUsername; 
-const dbPassword = process.env.DbPassword;
-const dbURL = process.env.DbHost;
-
-//database2
-const sequelize1 = new Sequelize(
-  Db,
-  dbUsername,
-  dbPassword,
-   {
-     host: dbURL,
-     dialect: 'mysql'
-   }
- );
-sequelize1.authenticate()
- .then(() => {
-   console.log('Connection to database! has been established successfully.');
- })
- .catch(err => {
-   console.error('Unable to connect to the database:', err);
- });
+const dbName = process.env.DB_NAME;  
+//const dbName1 = process.env.DB_NAME1;
+const dbUsername = process.env.DB_USERNAME;
+const dbPassword = process.env.DB_PASSWORD;
+const dbURL = process.env.DB_HOST;
 
 //create database1 connection
   const sequelize = new Sequelize(
@@ -65,51 +46,33 @@ sequelize1.authenticate()
      })
      .catch(err => {
        console.error('Unable to connect to the database:', err);
-      });
-
-//transaction table
-const transaction = sequelize1.define(
-  "transaction",{
-    idnumber:{ 
-      type: DataTypes.INTEGER
-  },
-    amountPayed: DataTypes.DECIMAL,
-    time:DataTypes.TIME
-},
-{
-  createdAt: false,
-  updatedAt: false,
-  freezeTableName: true,
-  timestamps: false
-}
- );
- transaction.removeAttribute('id');
-
+     });
 //client details databases instance
-const bot_view = sequelize.define(
-  "bot_view",{
-      idnumber:{ 
-        type: DataTypes.INTEGER
-      },
-      name:DataTypes.TEXT,
-      settlement_value:DataTypes.INTEGER,
-      full_contract_value:DataTypes.DECIMAL,
-      installment_value:DataTypes.DECIMAL
-  },
-  {
-      createdAt: false,
-      updatedAt: false,
-      freezeTableName: true,
-      timestamps: false
-  }
-);
-bot_view.removeAttribute('id');
+    const clientinfo = sequelize.define(
+        "clientinfo",{
+            idnumber:{ 
+              type: DataTypes.TEXT,
+              primaryKey: true
+            },
+            name:DataTypes.TEXT,
+            surname:DataTypes.TEXT,
+            Email:DataTypes.TEXT,
+            nettsalary:DataTypes.TEXT,
+            cellno:DataTypes.TEXT
+        },
+        {
+            createdAt: false,
+            updatedAt: false,
+            freezeTableName: true
+        }
+      );
 //Verifying the token 
 router.get('/webhook', (req, res) => {
     try {
         let mode = req.query['hub.mode'];
         let token = req.query['hub.verify_token'];
-        let challenge = req.query['hub.challenge']; 
+        let challenge = req.query['hub.challenge'];
+
         if (
             mode &&
             token &&
@@ -125,6 +88,7 @@ router.get('/webhook', (req, res) => {
         return res.sendStatus(500);
     }
 });
+
 //listening to events 
 router.post('/webhook', async (req, res) => {
     try{
@@ -180,41 +144,17 @@ router.post('/webhook', async (req, res) => {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); //detect numbers
             let count = incomingTextMessage.length;
-           if (filterID !== null  && count === 3) {
-             sequelize1.query("SELECT amountPayed FROM transaction WHERE idnumber ="+filterID,{type: sequelize.QueryTypes.SELECT})
-             .then(users =>{
-              if(users && users.length > 0){
-                users.forEach(user =>{
-                  const userData = user.map(`AmountPayed:${user.amountPayed}`);
-                   Whatsapp.sendSimpleButtons({
-                    message: (`${userData}`),
-                    recipientPhone: recipientPhone,
-                    listOfButtons: [{
-                      title: 'Continue Pay account',
-                      id: 'continue_btn'
-                    },
-                    {
-                      title: 'Cancel',
-                      id: 'Done_btn'
-                    }]
-                  });
-                })
-                
-              }
-              //else
-              else {
-                  Whatsapp.sendText({
-                  message:emoji.get(':pensive:')+ 'Sorry, we could not find a user with that ID number in our database.',
-                  recipientPhone: recipientPhone
-                });
-              }
-             });
-          
-           /*
-           if (users && users.length > 0) {
+           if (filterID !== null  && count === 13) {
+            const users = await clientinfo.findAll({
+              where: {
+                idnumber: filterID
+              },
+              limit: 5
+            });
+         if (users && users.length > 0) {
             const userData = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary}`);
               await Whatsapp.sendSimpleButtons({
-                message: (`${userData}`),
+                message: (`Please find information regarding your account below:\n\n${userData}\n\nTo continue making your payment, click the button below.\n\n`+emoji.get(':exclamation:')`Please note that updates to the balance will be reflected after 24 hours.`),
                 recipientPhone: recipientPhone,
                 listOfButtons: [{
                   title: 'Continue Pay account',
@@ -231,7 +171,6 @@ router.post('/webhook', async (req, res) => {
                 recipientPhone: recipientPhone
               });
             }
-            */
             
         } else if(filterID !== null && count !== 13) {
           await Whatsapp.sendText({
@@ -240,7 +179,7 @@ router.post('/webhook', async (req, res) => {
           });
         } 
             }
-    if(typeOfMsg === 'simple_button_message'){
+      if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
@@ -292,6 +231,5 @@ router.post('/webhook', async (req, res) => {
 });
 
 module.exports = router;
-
 
 

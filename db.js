@@ -1,21 +1,76 @@
+
 const dotenv = require('dotenv');
 const {Sequelize, DataTypes} = require("sequelize");
 dotenv.config();
-
-console.log('starting...')
-//Database variables
-/*
-const dbName = process.env.DB_NAME;  
-const dbUsername = process.env.DB_USERNAME;
-const dbPassword = process.env.DB_PASSWORD;
-const dbURL = process.env.DB_HOST;
-*/
+const prompt = require("prompt-sync")({ sigint: true });
+ 
 const dbName = process.env.DbName; 
 const Db = process.env.DbName1; 
 const dbUsername = process.env.DbUsername; 
 const dbPassword = process.env.DbPassword;
 const dbURL = process.env.DbHost;
 
+const idsNumber = prompt("enter your id number:");
+//db connection for database2 
+/******************************/
+const sequelize1 = new Sequelize(
+  Db,
+  dbUsername,
+  dbPassword,
+   {
+     host: dbURL,
+     dialect: 'mysql'
+   }
+ );
+sequelize1.authenticate()
+ .then(() => {
+   console.log('Connection to database! has been established successfully.');
+ })
+ .catch(err => {
+   console.error('Unable to connect to the database:', err);
+ });
+
+ const transaction = sequelize1.define(
+  "transaction",{
+    id:{ 
+      type: DataTypes.INTEGER,
+      primaryKey:true
+  },
+    idnumber:DataTypes.INTEGER,
+    amountPayed: DataTypes.DECIMAL,
+    time:DataTypes.TIME,
+    status:DataTypes.BOOLEAN
+},
+
+{
+  createdAt: false,
+  updatedAt: false,
+  freezeTableName: true,
+  timestamps: false
+}
+ );
+// transaction.removeAttribute('id');
+
+/******************************/
+const queries = sequelize1.define(
+  "queries",{
+    id:{ 
+      type: DataTypes.INTEGER,
+      primaryKey:true
+  },
+    ids:DataTypes.INTEGER,
+    latest_balance: DataTypes.DECIMAL
+},
+
+{
+  createdAt: false,
+  updatedAt: false,
+  freezeTableName: true,
+  timestamps: false
+}
+ );
+
+/******************************/
 
 //create database1 connection
 const sequelize = new Sequelize(
@@ -34,39 +89,6 @@ sequelize.authenticate()
  .catch(err => {
    console.error('Unable to connect to the database:', err);
  });
- //create database1 connection
-const sequelize1 = new Sequelize(
-  Db,
-  dbUsername,
-  dbPassword,
-   {
-     host: dbURL,
-     dialect: 'mysql'
-   }
- );
-sequelize1.authenticate()
- .then(() => {
-   console.log('Connection to database! has been established successfully.');
- })
- .catch(err => {
-   console.error('Unable to connect to the database:', err);
- });
- const transaction = sequelize1.define(
-  "transaction",{
-    idnumber:{ 
-      type: DataTypes.INTEGER
-  },
-    amountPayed: DataTypes.DECIMAL,
-    time:DataTypes.TIME
-},
-{
-  createdAt: false,
-  updatedAt: false,
-  freezeTableName: true,
-  timestamps: false
-}
- );
- transaction.removeAttribute('id');
 
 //client details databases instance
 const bot_view = sequelize.define(
@@ -86,7 +108,67 @@ const bot_view = sequelize.define(
         timestamps: false
     }
   );
+  
   bot_view.removeAttribute('id');
+
+//*******************************/
+async function updateOutstandingBalance() {
+    let outstandingBalance = null;
+    const payment = await transaction.findOne({
+      where: {
+        idnumber: idsNumber,
+        status:true
+      },
+      order: [['time', 'DESC']]
+    });
+    if (payment) {
+      console.log(`Amount paid: R${payment.amountPayed}`);
+      const record = await queries.findOne({
+        where: {
+          ids: payment.id
+        }
+      });
+      if (!record) {
+        await queries.create({
+          ids: payment.id
+        });
+        console.log("save...")
+        if (outstandingBalance === null || outstandingBalance !== payment.amountPayed) {
+          await bot_view.update({
+            full_contract_value: sequelize.literal(`full_contract_value - ${payment.amountPayed}`)
+          }, {
+            where: {
+              idnumber: idsNumber
+            }
+          });
+          console.log('Outstanding balance updated!' + payment.id);
+          outstandingBalance = payment.amountPayed;
+        }
+      } else {
+        console.log('Id already exists in the database');
+      }
+    }
+    const users = await bot_view.findAll({
+      where: {
+        idnumber: idsNumber
+      },
+      limit: 5
+    });
+    if (users && users.length > 0) {
+      users.forEach(user => {
+        console.log(`Name: ${user.name}\nFull Contract: R${user.settlement_value}\nCurrent balance: R${user.full_contract_value}\nDue:R${user.installment_value}`);
+      });
+    }
+  }                           
+  updateOutstandingBalance();
+
+/*
+if (users && users.length > 0) {
+  const userData = users.map(bot_view => `Name:${bot_view.name} ${bot_view.full_contract_value}\nCurrent balance is:R${bot_view.settlement_value}`);
+ 
+}
+
+ /*
   sequelize1.query(
     "SELECT amountPayed FROM transaction WHERE idnumber = '404' ORDER BY time DESC LIMIT 1",{ type: sequelize.QueryTypes.SELECT})
     .then(result => {
@@ -103,4 +185,4 @@ const bot_view = sequelize.define(
          console.error('Unable to fetch data from the view:', err);
        });
     });
-    //
+    */
