@@ -149,7 +149,7 @@ router.post('/webhook', async (req, res) => {
               where: {
                 idnumber: filterID
               },
-              limit: 5
+              limit: 1
             });
          if (users && users.length > 0) {
             const userData = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary}`);
