@@ -23,9 +23,7 @@ const Whatsapp = new WhatsappCloudAPI({
     res.status(200).send("Webhook working...");
 });
 
-//Database variables
 const dbName = process.env.DB_NAME;  
-//const dbName1 = process.env.DB_NAME1;
 const dbUsername = process.env.DB_USERNAME;
 const dbPassword = process.env.DB_PASSWORD;
 const dbURL = process.env.DB_HOST;
@@ -152,7 +150,7 @@ router.post('/webhook', async (req, res) => {
               limit: 1
             });
          if (users && users.length > 0) {
-            const userData = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary}`);
+            const userData = users.map(clientinfo => `Name: ${clientinfo.name} ${clientinfo.surname}\nBalance: R${clientinfo.nettsalary}`);
               await Whatsapp.sendSimpleButtons({
                 message: (`Please find information regarding your account below:\n\n${userData}\n\nTo continue making your payment, click the button below.\n\n`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.`),
                 recipientPhone: recipientPhone,
@@ -190,9 +188,13 @@ router.post('/webhook', async (req, res) => {
     }                 
  if(typeOfMsg === 'simple_button_message'){
   let buttonID = incomingMessage.button_reply.id;
+  const recipients = ['D04JS6K7ZQ9', 'C04JG1K9M5J'];
+  let recipientIndex = 0;
   if (buttonID === 'live_agent'){
+    const recipient = recipients[recipientIndex];
+    recipientIndex = (recipientIndex + 1) % recipients.length;
      await slack.chat.postMessage({
-      channel: '#general',
+      channel: recipient,
       text: `A user has requested a transfer to a live agent. User number: ${recipientPhone}.`,
       attachments: [
         {
