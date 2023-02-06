@@ -154,7 +154,7 @@ router.post('/webhook', async (req, res) => {
          if (users && users.length > 0) {
             const userData = users.map(clientinfo => `Name:${clientinfo.name} ${clientinfo.surname}\nCurrent balance is:R${clientinfo.nettsalary}`);
               await Whatsapp.sendSimpleButtons({
-                message: (`Please find information regarding your account below:\n\n${userData}\n\nTo continue making your payment, click the button below.\n\n`+emoji.get(':exclamation:')`Please note that updates to the balance will be reflected after 24 hours.`),
+                message: (`Please find information regarding your account below:\n\n${userData}\n\nTo continue making your payment, click the button below.\n\n`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.`),
                 recipientPhone: recipientPhone,
                 listOfButtons: [{
                   title: 'Continue Pay account',
