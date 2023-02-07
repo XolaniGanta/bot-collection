@@ -182,13 +182,13 @@ router.post('/webhook', async (req, res) => {
     if (typeOfMsg === 'simple_button_message') {
       let buttonID = incomingMessage.button_reply.id;
       const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
+      let recipientIndex = 0;
+      
       if (buttonID === 'live_agent') {
-        let recipientIndex = 0;
-        recipientIndex = (recipientIndex + 1) % recipients.length;
-        console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
+        recipientIndex = (recipientIndex === 0) ? 1 : 0;
         const recipient = recipients[recipientIndex];
         console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
-        await slack.chat.postMessage({
+         await slack.chat.postMessage({
           channel: recipient,
           text: `A user has requested a transfer to a live agent. User number: ${recipientPhone}.`,
           attachments: [
@@ -206,9 +206,9 @@ router.post('/webhook', async (req, res) => {
             }
           ]
         });
-        console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
       }
     }
+    
   if(typeOfMsg === 'simple_button_message'){
     let buttonID = incomingMessage.button_reply.id;
     if (buttonID === 'Done_btn'){
