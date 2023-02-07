@@ -185,6 +185,7 @@ router.post('/webhook', async (req, res) => {
       let recipientIndex = 0;
       if (buttonID === 'live_agent') {
         const recipient = recipients[recipientIndex];
+        console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
         await slack.chat.postMessage({
           channel: recipient,
           text: `A user has requested a transfer to a live agent. User number: ${recipientPhone}.`,
@@ -204,6 +205,7 @@ router.post('/webhook', async (req, res) => {
           ]
         });
         recipientIndex = (recipientIndex + 1) % recipients.length;
+        console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
       }
     }
   if(typeOfMsg === 'simple_button_message'){
