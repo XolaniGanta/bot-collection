@@ -179,32 +179,33 @@ router.post('/webhook', async (req, res) => {
             })
         }
     }                 
- if(typeOfMsg === 'simple_button_message'){
-  let buttonID = incomingMessage.button_reply.id;
-  const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
-  if (buttonID === 'live_agent'){
-    let recipientIndex = 0;
-    const recipient = recipients[recipientIndex];
-    recipientIndex = (recipientIndex + 1) % recipients.length;
-     await slack.chat.postMessage({
-      channel: recipient,
-      text: `A user has requested a transfer to a live agent. User number: ${recipientPhone}.`,
-      attachments: [
-        {
-          text: "Ticket status",
-          callback_id: "transfer_agent",
-           actions: [
+    if (typeOfMsg === 'simple_button_message') {
+      let buttonID = incomingMessage.button_reply.id;
+      const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
+      if (buttonID === 'live_agent') {
+        let recipientIndex = 0;
+        const recipient = recipients[recipientIndex];
+        await slack.chat.postMessage({
+          channel: recipient,
+          text: `A user has requested a transfer to a live agent. User number: ${recipientPhone}.`,
+          attachments: [
             {
-              name: "transfer",
-              type: "button",
-              text: "Solve me",
-              value: "transfer"
+              text: "Ticket status",
+              callback_id: "transfer_agent",
+              actions: [
+                {
+                  name: "transfer",
+                  type: "button",
+                  text: "Solve me",
+                  value: "transfer"
+                }
+              ]
             }
           ]
-     }]
-  });
-  }
-} 
+        });
+        recipientIndex = (recipientIndex + 1) % recipients.length;
+      }
+    }
   if(typeOfMsg === 'simple_button_message'){
     let buttonID = incomingMessage.button_reply.id;
     if (buttonID === 'Done_btn'){
