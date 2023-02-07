@@ -7,8 +7,6 @@ const { WebClient } = require('@slack/web-api');
 const emoji = require('node-emoji');
 const bolds = require('node-strings');
 
-
-//Enter slack token to gain Access to Slack API
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slack = new WebClient(slackToken);
 
@@ -18,7 +16,6 @@ const Whatsapp = new WhatsappCloudAPI({
     WABA_ID: process.env.Meta_WA_wabaId,
     graphAPIVersion: 'v15.0'
 });
-  //check our application
   router.get("/", (req, res) => {
     res.status(200).send("Webhook working...");
 });
@@ -28,8 +25,7 @@ const dbUsername = process.env.DB_USERNAME;
 const dbPassword = process.env.DB_PASSWORD;
 const dbURL = process.env.DB_HOST;
 
-//create database1 connection
-  const sequelize = new Sequelize(
+const sequelize = new Sequelize(
       dbName,
       dbUsername,
       dbPassword,
@@ -45,7 +41,6 @@ const dbURL = process.env.DB_HOST;
      .catch(err => {
        console.error('Unable to connect to the database:', err);
      });
-//client details databases instance
     const clientinfo = sequelize.define(
         "clientinfo",{
             idnumber:{ 
@@ -64,7 +59,6 @@ const dbURL = process.env.DB_HOST;
             freezeTableName: true
         }
       );
-//Verifying the token 
 router.get('/webhook', (req, res) => {
     try {
         let mode = req.query['hub.mode'];
@@ -87,7 +81,6 @@ router.get('/webhook', (req, res) => {
     }
 });
 
-//listening to events 
 router.post('/webhook', async (req, res) => {
     try{
         let data = Whatsapp.parseMessage(req.body);
@@ -95,14 +88,14 @@ router.post('/webhook', async (req, res) => {
 
         if (data?.isMessage) {
             let incomingMessage = data.message;
-            let recipientPhone = incomingMessage.from.phone; // extract the phone number of sender
+            let recipientPhone = incomingMessage.from.phone; 
            // let recipientName = incomingMessage.from.name;
-            let typeOfMsg = incomingMessage.type; // extract the type of message (some are text, others are images, others are responses to buttons etc...)
-            let message_id = incomingMessage.message_id; // extract the message id
+            let typeOfMsg = incomingMessage.type; 
+            let message_id = incomingMessage.message_id; 
         
            if (typeOfMsg === 'text_message') {
               let incomingTextMessage = incomingMessage.text.body;
-              let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); //if its only letters
+              let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); 
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
                   message: `Hi `+emoji.get(':wave:')+ ` Welcome to Bestie the bot, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nClick the below button to get started \n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
@@ -140,7 +133,7 @@ router.post('/webhook', async (req, res) => {
           } 
     if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
-            let filterID = incomingTextMessage.match(/^\d+$/); //detect numbers
+            let filterID = incomingTextMessage.match(/^\d+$/); 
             let count = incomingTextMessage.length;
            if (filterID !== null  && count === 13) {
             const users = await clientinfo.findAll({
@@ -188,7 +181,7 @@ router.post('/webhook', async (req, res) => {
     }                 
  if(typeOfMsg === 'simple_button_message'){
   let buttonID = incomingMessage.button_reply.id;
-  const recipients = ['D04JS6K7ZQ9', 'C04JG1K9M5J'];
+  const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
   let recipientIndex = 0;
   if (buttonID === 'live_agent'){
     const recipient = recipients[recipientIndex];
