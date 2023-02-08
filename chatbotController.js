@@ -41,17 +41,16 @@ const sequelize = new Sequelize(
      .catch(err => {
        console.error('Unable to connect to the database:', err);
      });
-    const clientinfo = sequelize.define(
-        "clientinfo",{
+    const bot_views = sequelize.define(
+        "bot_views",{
             idnumber:{ 
-              type: DataTypes.TEXT,
-              primaryKey: true
+              type: DataTypes.TEXT
             },
             name:DataTypes.TEXT,
             surname:DataTypes.TEXT,
-            Email:DataTypes.TEXT,
-            nettsalary:DataTypes.TEXT,
-            cellno:DataTypes.TEXT
+            settlement_value:DataTypes.INTEGER,
+            full_contract_value:DataTypes.DECIMAL,
+            installment_value:DataTypes.DECIMAL
         },
         {
             createdAt: false,
@@ -59,6 +58,9 @@ const sequelize = new Sequelize(
             freezeTableName: true
         }
       );
+
+      bot_views.removeAttribute('id');
+
 router.get('/webhook', (req, res) => {
     try {
         let mode = req.query['hub.mode'];
@@ -136,14 +138,14 @@ router.post('/webhook', async (req, res) => {
             let filterID = incomingTextMessage.match(/^\d+$/); 
             let count = incomingTextMessage.length;
            if (filterID !== null  && count === 13) {
-            const users = await clientinfo.findAll({
+            const users = await bot_views.findAll({
               where: {
                 idnumber: filterID
               },
               limit: 1
             });
          if (users && users.length > 0) {
-            const userData = users.map(clientinfo => `Name: ${clientinfo.name} ${clientinfo.surname}\nBalance: R${clientinfo.nettsalary}`);
+            const userData = users.map(bot_views => `Name: ${bot_views.name} ${bot_views.surname}\nBalance: R${bot_views.settlement_value}\nDue: R${bot_views.installment_value}`);
               await Whatsapp.sendSimpleButtons({
                 message: (`Please find information regarding your account below:\n\n${userData}\n\nTo continue making your payment, click the button below.\n\n`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.`),
                 recipientPhone: recipientPhone,
