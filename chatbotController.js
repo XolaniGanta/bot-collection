@@ -91,10 +91,10 @@ router.post('/webhook', async (req, res) => {
         if (data?.isMessage) {
             let incomingMessage = data.message;
             let recipientPhone = incomingMessage.from.phone; 
-           // let recipientName = incomingMessage.from.name;
+           // let recipientName = incomingMessage.from.name
             let typeOfMsg = incomingMessage.type; 
             let message_id = incomingMessage.message_id; 
-        
+      
            if (typeOfMsg === 'text_message') {
               let incomingTextMessage = incomingMessage.text.body;
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); 
@@ -145,7 +145,7 @@ router.post('/webhook', async (req, res) => {
               limit: 1
             });
          if (users && users.length > 0) {
-            const userData = users.map(bot_views => `Name: ${bot_views.name} ${bot_views.surname}\nBalance: R${bot_views.settlement_value}\nDue: R${bot_views.installment_value}`);
+            const userData = users.map(bot_views => `Name: ${bot_views.name} ${bot_views.surname}\nFull Contract:R${bot_views.full_contract_value}\nBalance: R${bot_views.settlement_value}\nMonthly installment: R${bot_views.installment_value}`);
               await Whatsapp.sendSimpleButtons({
                 message: (`Please find information regarding your account below:\n\n${userData}\n\nTo continue making your payment, click the button below.\n\n`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.`),
                 recipientPhone: recipientPhone,
@@ -209,7 +209,6 @@ router.post('/webhook', async (req, res) => {
         });
       }
     }
-    
   if(typeOfMsg === 'simple_button_message'){
     let buttonID = incomingMessage.button_reply.id;
     if (buttonID === 'Done_btn'){
