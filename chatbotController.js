@@ -36,7 +36,7 @@ const sequelize = new Sequelize(
      );
   sequelize.authenticate()
      .then(() => {
-       console.log('Connection to database has been established successfully.');
+       console.log("**Connection to database has been established successfully.**");
      })
      .catch(err => {
        console.error('Unable to connect to the database:', err);
@@ -48,7 +48,7 @@ const sequelize = new Sequelize(
             },
             name:DataTypes.TEXT,
             surname:DataTypes.TEXT,
-            settlement_value:DataTypes.INTEGER,
+            settlement_value:DataTypes.DECIMAL,
             full_contract_value:DataTypes.DECIMAL,
             installment_value:DataTypes.DECIMAL
         },
@@ -59,7 +59,7 @@ const sequelize = new Sequelize(
         }
       );
 
-      bot_views.removeAttribute('id');
+bot_views.removeAttribute('id');
 
 router.get('/webhook', (req, res) => {
     try {
@@ -100,7 +100,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); 
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hi `+emoji.get(':wave:')+ ` Welcome to Bestie ` +emoji.get(':robot_face:')+ ` the bot, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nClick the below button to get started \n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
+                  message: `**Hi** `+emoji.get(':wave:')+ ` Welcome to Bestie ` +emoji.get(':robot_face:')+ ` the bot, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nClick the below button to get started \n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Get Started',
@@ -147,7 +147,7 @@ router.post('/webhook', async (req, res) => {
          if (users && users.length > 0) {
             const userData = users.map(bot_views => `Name: ${bot_views.name} ${bot_views.surname}\nFull Contract: R${bot_views.full_contract_value}\nBalance: R${bot_views.settlement_value}\nDue: R${bot_views.installment_value}`);//closed_lock_with_key
               await Whatsapp.sendSimpleButtons({
-                message: (`\x1b[1mPlease find information regarding your account below:\n\n${userData}\n\nTo continue making your payment, click the button below.\n\n`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.`),
+                message: (`**Please find information regarding your account below:\n\n${userData}\n\nTo continue making your payment, click the button below.\n\n`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.`),
                 recipientPhone: recipientPhone,
                 listOfButtons: [{
                   title: 'Continue Pay account',
@@ -158,6 +158,7 @@ router.post('/webhook', async (req, res) => {
                   id: 'Done_btn'
                 }]
               });
+              
             } else {
               await Whatsapp.sendText({
                 message:emoji.get(':pensive:')+ 'Sorry, we could not find a user with that ID number in our database.',
