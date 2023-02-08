@@ -128,7 +128,7 @@ router.post('/webhook', async (req, res) => {
             let buttonID = incomingMessage.button_reply.id;
             if (buttonID === 'check_balance') {
               await Whatsapp.sendText({
-                message: emoji.get(':exclamation:')+`In order to continue you are required to enter your id number.*`,
+                message: `*`+emoji.get(':exclamation:')+`In order to continue you are required to enter your id number.*`,
                 recipientPhone: recipientPhone
               });
             }
@@ -177,7 +177,7 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: emoji.get(':exclamation:')+ `*Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this URL to make your payment now: https://d228-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php\n\n` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.`,
+              message: emoji.get(':exclamation:')+ `*Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this URL to make your payment now: https://d228-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php\n\n*` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.*`,
               recipientPhone: recipientPhone,
             })
         }
