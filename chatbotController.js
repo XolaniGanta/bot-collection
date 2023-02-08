@@ -100,7 +100,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); 
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `Hi `+emoji.get(':wave:')+ ` Welcome to Bestie the bot, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nClick the below button to get started \n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
+                  message: `Hi `+emoji.get(':wave:')+ ` Welcome to Bestie` +emoji.get(':robot_face:')+ `the bot, powered by Bestforu - the safe, easy way to pay and check balance on your account.\n\nClick the below button to get started \n\nShortcut`+emoji.get(':bulb:')+`: If you need help reply with # to chat with an agent`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Get Started',
@@ -145,7 +145,7 @@ router.post('/webhook', async (req, res) => {
               limit: 1
             });
          if (users && users.length > 0) {
-            const userData = users.map(bot_views => `Name: ${bot_views.name} ${bot_views.surname}\nFull Contract:R${bot_views.full_contract_value}\nBalance: R${bot_views.settlement_value}\nMonthly installment: R${bot_views.installment_value}`);
+            const userData = users.map(bot_views => `Name: ${bot_views.name} ${bot_views.surname}\nFull Contract: R${bot_views.full_contract_value}\nBalance: R${bot_views.settlement_value}\nDue: R${bot_views.installment_value}`);//closed_lock_with_key
               await Whatsapp.sendSimpleButtons({
                 message: (`Please find information regarding your account below:\n\n${userData}\n\nTo continue making your payment, click the button below.\n\n`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.`),
                 recipientPhone: recipientPhone,
@@ -176,7 +176,7 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL to make your payment now: https://d228-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php \n\nMaking payment with us is both secure and convenient. Rest assured that your personal information is protected with advanced security measures.`,
+              message: emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.\n\nPlease follow this URL to make your payment now: https://d228-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php` `\n\n`+emoji.get(':closed_lock_with_key:')+`Making payment with us is both secure and convenient. Rest assured that your personal information is protected with advanced security measures.`,
               recipientPhone: recipientPhone,
             })
         }
