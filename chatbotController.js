@@ -100,7 +100,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); 
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `*Hi `+emoji.get(':wave:')+ ` Welcome to Bestie ` +emoji.get(':robot_face:')+ ` the bot.* \n\nPowered by Bestforu - the safe, easy way to pay and check balance on your account.\n\n*Click the below button to get started*\n\n`+emoji.get(':bulb:')+`If you need help reply with # to chat with an agent.*`,
+                  message: `*Hi `+emoji.get(':wave:')+ ` Welcome to Bestie ` +emoji.get(':robot_face:')+ ` the bot.* \n\nPowered by Bestforu - the safe, easy way to pay and check balance on your account.\n\n*Click the below button to get started*\n\n*`+emoji.get(':bulb:')+`If you need help reply with # to chat with an agent.*`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Get Started',
