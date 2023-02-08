@@ -147,7 +147,7 @@ router.post('/webhook', async (req, res) => {
          if (users && users.length > 0) {
             const userData = users.map(bot_views => `Name: ${bot_views.name} ${bot_views.surname}\nFull Contract: R${bot_views.full_contract_value}\nBalance: R${bot_views.settlement_value}\nDue: R${bot_views.installment_value}`);//closed_lock_with_key
               await Whatsapp.sendSimpleButtons({
-                message: (`*Please find information regarding your account below:*\n\n${userData}\n\n*To continue making your payment, click the button below.*\n\n`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.`),
+                message: (`*Please find information regarding your account below:*\n\n${userData}\n\n*To continue making your payment, click the button below.*\n\n*`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.*`),
                 recipientPhone: recipientPhone,
                 listOfButtons: [{
                   title: 'Continue Pay account',
@@ -214,7 +214,7 @@ router.post('/webhook', async (req, res) => {
     let buttonID = incomingMessage.button_reply.id;
     if (buttonID === 'Done_btn'){
         await Whatsapp.sendText({
-          message: `Sad to see you going.\n\nPlease make sure you have settle your account.\n\nCheers have a good day`+emoji.get(':wave:'),
+          message: `Sad to see you going.\n\n*Please make sure you have settle your account.*\n\nCheers have a good day`+emoji.get(':wave:'),
           recipientPhone: recipientPhone,
         })
     }
