@@ -115,7 +115,7 @@ router.post('/webhook', async (req, res) => {
             let filterAgent = incomingTextMessage;
              if(filterAgent === '#'){
               await Whatsapp.sendSimpleButtons({
-                message: `*Click the button below and an agent will be in contact with you shortly.*`,
+                message: `Click the button below and an agent will be in contact with you shortly.`,
                 recipientPhone: recipientPhone,
                 listOfButtons:[{
                   title: 'Live Agent',
@@ -187,7 +187,7 @@ router.post('/webhook', async (req, res) => {
       const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
       let recipientIndex = 0;
       if (buttonID === 'live_agent') {
-        recipientIndex = (recipientIndex === 0) ? 1 : 0;
+        recipientIndex = (recipientIndex + 1) % 2;
       const recipient = recipients[recipientIndex];
         console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
          await slack.chat.postMessage({
