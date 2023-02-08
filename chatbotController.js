@@ -100,7 +100,7 @@ router.post('/webhook', async (req, res) => {
               let filterID = incomingTextMessage.match(/^[a-zA-Z]+$/); 
               if (filterID !== null) {
                 Whatsapp.sendSimpleButtons({
-                  message: `*Hi `+emoji.get(':wave:')+ ` Welcome to Bestie ` +emoji.get(':robot_face:')+ ` the bot.* \n\nPowered by Bestforu - the safe, easy way to pay and check balance on your account.\n\n*Click the below button to get started \n\n*`+emoji.get(':bulb:')+`If you need help reply with # to chat with an agent.*`,
+                  message: `*Hi `+emoji.get(':wave:')+ ` Welcome to Bestie ` +emoji.get(':robot_face:')+ ` the bot.* \n\nPowered by Bestforu - the safe, easy way to pay and check balance on your account.*\n\nClick the below button to get started \n\n*`+emoji.get(':bulb:')+`If you need help reply with # to chat with an agent.*`,
                   recipientPhone: recipientPhone,
                   listOfButtons: [{
                       title: 'Get Started',
@@ -115,7 +115,7 @@ router.post('/webhook', async (req, res) => {
             let filterAgent = incomingTextMessage;
              if(filterAgent === '#'){
               await Whatsapp.sendSimpleButtons({
-                message: `Click the button below and an agent will be in contact with you shortly.`,
+                message: `*Click the button below and an agent will be in contact with you shortly.*`,
                 recipientPhone: recipientPhone,
                 listOfButtons:[{
                   title: 'Live Agent',
@@ -177,7 +177,7 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: emoji.get(':exclamation:')+ `*Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this URL to make your payment now: https://d228-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php\n\n*` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.*`,
+              message: emoji.get(':exclamation:')+ `*Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this link to make your payment now ` +emoji.get(':exclamation:')+`: https://d228-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php\n\n*` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.*`,
               recipientPhone: recipientPhone,
             })
         }
