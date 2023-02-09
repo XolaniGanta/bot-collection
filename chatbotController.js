@@ -175,7 +175,7 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: `*`+emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this link to make your payment now ` +emoji.get(':point_right:')+`: [Pay Now](http://apspay.biz/) \n\n*` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.*`,
+              message: `*`+emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this link to make your payment now ` +emoji.get(':point_right:')+`: http://apspay.biz/ \n\n*` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.*`,
               recipientPhone: recipientPhone,
             })
         }
