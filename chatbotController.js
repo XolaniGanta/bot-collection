@@ -160,7 +160,7 @@ router.post('/webhook', async (req, res) => {
               });
             } else {
               await Whatsapp.sendText({
-                message:emoji.get(':pensive:')+ 'Sorry, we could not find a user with that ID number in our database.',
+                message:emoji.get(':pensive:')+ 'Sorry, we could not find a user with that ID number in our database.Please check if the ID number is correct and enter again.\n\nIf the issue persist connect to our agent by replying with #',
                 recipientPhone: recipientPhone
               });
             }
