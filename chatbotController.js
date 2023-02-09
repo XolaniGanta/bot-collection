@@ -219,6 +219,15 @@ router.post('/webhook', async (req, res) => {
         })
     }
 } 
+if(typeOfMsg === 'simple_button_message'){
+  let buttonID = incomingMessage.button_reply.id;
+  if (buttonID === 'live_agent'){
+      await Whatsapp.sendText({
+        message: `*Connecting to an agent...*\n\nWhile waiting for an agent you can browse through our products`,
+        recipientPhone: recipientPhone,
+      })
+  }
+} 
     await Whatsapp.markMessageAsRead({
       message_id,
 });
