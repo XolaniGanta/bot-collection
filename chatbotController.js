@@ -182,10 +182,10 @@ router.post('/webhook', async (req, res) => {
     }                 
     if (typeOfMsg === 'simple_button_message') {
       let buttonID = incomingMessage.button_reply.id;
-      const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
       let recipientIndex = 0;
+      const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
       if (buttonID === 'live_agent') {
-        recipientIndex = (recipientIndex + 1) % 2;
+        recipientIndex = (recipientIndex + 1) % recipients.length;
       const recipient = recipients[recipientIndex];
         console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
          await slack.chat.postMessage({
