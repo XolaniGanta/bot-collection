@@ -190,7 +190,7 @@ router.post('/webhook', async (req, res) => {
         console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
         await slack.chat.postMessage({
           channel: recipient,
-          text: `A user has requested a transfer to a live agent. User number: ${recipientPhone}.`,
+          text: `*A user has requested a transfer to a live agent. User number: 0${recipientPhone}.*`,
           attachments: [
             {
               text: "Ticket status",
