@@ -158,14 +158,12 @@ router.post('/webhook', async (req, res) => {
                   id: 'Done_btn'
                 }]
               });
-              
             } else {
               await Whatsapp.sendText({
                 message:emoji.get(':pensive:')+ 'Sorry, we could not find a user with that ID number in our database.',
                 recipientPhone: recipientPhone
               });
             }
-            
         } else if(filterID !== null && count !== 13) {
           await Whatsapp.sendText({
             message:emoji.get(':grimacing:')+'Oops! it seems you have entered a wrong id number, Please check and re-enter your id number',
@@ -177,7 +175,7 @@ router.post('/webhook', async (req, res) => {
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: `*`+emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this link to make your payment now ` +emoji.get(':point_right:')+`: https://d228-102-134-121-96.in.ngrok.io/trustlink_integration/checkout.php\n\n*` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.*`,
+              message: `*`+emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this link to make your payment now ` +emoji.get(':point_right:')+`: http://apspay.biz/\n\n*` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.*`,
               recipientPhone: recipientPhone,
             })
         }
@@ -227,8 +225,7 @@ if(typeOfMsg === 'simple_button_message'){
         recipientPhone: recipientPhone,
       })
   }
-} 
-    await Whatsapp.markMessageAsRead({
+} await Whatsapp.markMessageAsRead({
       message_id,
 });
  }                      
