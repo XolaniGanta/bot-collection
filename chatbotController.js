@@ -183,7 +183,7 @@ router.post('/webhook', async (req, res) => {
     if (typeOfMsg === 'simple_button_message') {
       let buttonID = incomingMessage.button_reply.id;
       const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
-      let recipientIndex = 1;
+      let recipientIndex = 0;
       if (buttonID === 'live_agent') {
         recipientIndex = (recipientIndex + 1) % 2;
       const recipient = recipients[recipientIndex];
