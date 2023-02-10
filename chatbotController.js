@@ -6,6 +6,8 @@ const {Sequelize, DataTypes} = require("sequelize");
 const { WebClient } = require('@slack/web-api');
 const emoji = require('node-emoji');
 const bolds = require('node-strings');
+const Agent1=process.env.CHANNEL_ID1;
+const Agent2=process.env.CHANNEL_ID2;
 
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slack = new WebClient(slackToken);
@@ -170,7 +172,7 @@ router.post('/webhook', async (req, res) => {
             recipientPhone: recipientPhone
           });
         } 
-          }
+          }                                            
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
         if (buttonID === 'continue_btn'){
@@ -183,14 +185,13 @@ router.post('/webhook', async (req, res) => {
     if (typeOfMsg === 'simple_button_message') {
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'live_agent') {
-       
-        const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
+        const recipients = [Agent1, Agent2];
         let recipientIndex = Math.floor(Math.random() * recipients.length);
         const recipient = recipients[recipientIndex];
         console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
         await slack.chat.postMessage({
           channel: recipient,
-          text: `*A user has requested a transfer to a live agent. User number: 0${recipientPhone}.*`,
+          text: `*A user has requested a transfer to a live agent. User number: +${recipientPhone}.*`,
           attachments: [
             {
               text: "Ticket status",
@@ -208,7 +209,6 @@ router.post('/webhook', async (req, res) => {
         });
       }
     }
-    
   if(typeOfMsg === 'simple_button_message'){
     let buttonID = incomingMessage.button_reply.id;
     if (buttonID === 'Done_btn'){
