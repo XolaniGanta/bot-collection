@@ -93,7 +93,7 @@ router.post('/webhook', async (req, res) => {
         if (data?.isMessage) {
             let incomingMessage = data.message;
             let recipientPhone = incomingMessage.from.phone; 
-           // let recipientName = incomingMessage.from.name
+            // let recipientName = incomingMessage.from.name
             let typeOfMsg = incomingMessage.type; 
             let message_id = incomingMessage.message_id; 
       
@@ -134,7 +134,7 @@ router.post('/webhook', async (req, res) => {
                 recipientPhone: recipientPhone
               });
             }
-          } 
+          }
     if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); 
@@ -188,7 +188,6 @@ router.post('/webhook', async (req, res) => {
         const recipients = [Agent1, Agent2];
         let recipientIndex = Math.floor(Math.random() * recipients.length);
         const recipient = recipients[recipientIndex];
-        console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
         await slack.chat.postMessage({
           channel: recipient,
           text: `*A user has requested a transfer to a live agent. User number: +${recipientPhone}.*`,
@@ -196,16 +195,8 @@ router.post('/webhook', async (req, res) => {
             {
               text: "Ticket status",
               callback_id: "transfer_agent",
-              actions: [
-                {
-                  name: "transfer",
-                  type: "button",
-                  text: "Solve me",
-                  value: "transfer"
-                }
-              ]
             }
-          ]
+          ] 
         });
       }
     }
@@ -236,7 +227,6 @@ if(typeOfMsg === 'simple_button_message'){
     return res.sendStatus(500);
 }
 });
-
 module.exports = router;
 
 
