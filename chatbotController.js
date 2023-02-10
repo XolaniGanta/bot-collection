@@ -185,7 +185,7 @@ router.post('/webhook', async (req, res) => {
     if (typeOfMsg === 'simple_button_message') {
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'live_agent') {
-        const recipients = [Agent1, Agent2];
+        const recipients = ['C04JDHFEJCA','C04JG1K9M5J'];
         let recipientIndex = Math.floor(Math.random() * recipients.length);
         const recipient = recipients[recipientIndex];
         await slack.chat.postMessage({
