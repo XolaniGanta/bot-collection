@@ -159,7 +159,7 @@ router.post('/webhook', async (req, res) => {
               });
             } else {
               await Whatsapp.sendText({
-                message:`*`+emoji.get(':pensive:')+ `Apologies, ID number: ${filterID} not located in our records.*\n\n Please check and re-enter your id number.\n\nIf the issue persist connect to an agent for assistance by replying with #`,
+                message:`*`+emoji.get(':pensive:')+ `Apologies, Id number: '${filterID}' not located in our records.*\n\n Please check and re-enter your id number.\n\nIf the issue persist connect to an agent for assistance by replying with #`,
                 recipientPhone: recipientPhone
               });
             }
