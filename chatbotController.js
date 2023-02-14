@@ -159,7 +159,7 @@ router.post('/webhook', async (req, res) => {
               });
             } else {
               await Whatsapp.sendText({
-                message:emoji.get(':pensive:')+ `Sorry, we could not find a user with: *'${filterID}'* on our records.\n\n *Please check if the id number is correct and try again.*\n\nIf the issue persist connect to an agent for assistance by replying with #`,
+                message:emoji.get(':pensive:')+ `Sorry, we could not find a user with *'${filterID}'* on our records.\n\nPlease check if the id number is correct and try again.\n\n*If the issue persist connect to an agent for assistance by replying with #*`,
                 recipientPhone: recipientPhone
               });
             }
