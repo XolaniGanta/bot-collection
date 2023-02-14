@@ -6,7 +6,6 @@ const {Sequelize, DataTypes} = require("sequelize");
 const { WebClient } = require('@slack/web-api');
 const emoji = require('node-emoji');
 const bolds = require('node-strings');
-const Agent1=process.env.CHANNEL_ID1;
 
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slack = new WebClient(slackToken);
@@ -67,8 +66,7 @@ router.get('/webhook', (req, res) => {
         let mode = req.query['hub.mode'];
         let token = req.query['hub.verify_token'];
         let challenge = req.query['hub.challenge'];
-
-        if (
+         if (
             mode &&
             token &&
             mode === 'subscribe' &&
@@ -110,7 +108,7 @@ router.post('/webhook', async (req, res) => {
                 ]
                 });
               }
-          }
+            }
           if (typeOfMsg === 'text_message') {
             let incomingTextMessage = incomingMessage.text.body;
             let filterAgent = incomingTextMessage;
@@ -144,7 +142,7 @@ router.post('/webhook', async (req, res) => {
                 idnumber: filterID
               },
               limit: 1
-            });
+            });  
          if (users && users.length > 0) {
             const userData = users.map(bot_views => `Name: ${bot_views.name} ${bot_views.surname}\nFull Contract: R${bot_views.full_contract_value}\nBalance: R${bot_views.settlement_value}\nDue: R${bot_views.installment_value}`);//closed_lock_with_key
               await Whatsapp.sendSimpleButtons({
@@ -161,7 +159,7 @@ router.post('/webhook', async (req, res) => {
               });
             } else {
               await Whatsapp.sendText({
-                message:emoji.get(':pensive:')+ `Apologies, ID number not located in our records. Please check and re-enter your id number.`,
+                message:emoji.get(':pensive:')+ `Apologies, ID number: ${filterID} not located in our records. Please check and re-enter your id number.\n\nIf the issue persist connect to an agent for assistance by replying with #`,
                 recipientPhone: recipientPhone
               });
             }
@@ -180,16 +178,15 @@ router.post('/webhook', async (req, res) => {
               recipientPhone: recipientPhone,
             })
         }
-    }                 
+    }             
     if (typeOfMsg === 'simple_button_message') {
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'live_agent') {
-       
         const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
         let recipientIndex = Math.floor(Math.random() * recipients.length);
         const recipient = recipients[recipientIndex];
         console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
-        await slack.chat.postMessage({
+         await slack.chat.postMessage({
           channel: recipient,
           text: `*A user has requested a transfer to a live agent. User number: +${recipientPhone}.*`,
           attachments: [
@@ -217,7 +214,7 @@ router.post('/webhook', async (req, res) => {
           recipientPhone: recipientPhone,
         })
     }
-} 
+}                                                                               
 if(typeOfMsg === 'simple_button_message'){
   let buttonID = incomingMessage.button_reply.id;
   if (buttonID === 'live_agent'){
