@@ -172,13 +172,14 @@ router.post('/webhook', async (req, res) => {
           }                                            
       if(typeOfMsg === 'simple_button_message'){
         let buttonID = incomingMessage.button_reply.id;
+        let url = `http://apspay.biz/?filterID=${filterID}`
         if (buttonID === 'continue_btn'){
             await Whatsapp.sendText({
-              message: `*`+emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this link to make your payment now ` +emoji.get(':point_right:')+`: http://apspay.biz/ \n\n*` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.*`,
+              message: `*`+emoji.get(':exclamation:')+ `Please note you will be redirected outside WhatsApp to make your secure payments.*\n\nPlease follow this link to make your payment now ` +emoji.get(':point_right:')+`: ${url} \n\n*` +emoji.get(':closed_lock_with_key:')+ `Rest assured that your personal information is protected with advanced security measures.*`,
               recipientPhone: recipientPhone,
             })
         }
-    }             
+    } 
     if (typeOfMsg === 'simple_button_message') {
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'live_agent') {
@@ -233,7 +234,6 @@ if(typeOfMsg === 'simple_button_message'){
     return res.sendStatus(500);
 }
 });
-
 module.exports = router;
 
 
