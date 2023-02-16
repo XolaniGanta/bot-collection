@@ -81,7 +81,6 @@ router.get('/webhook', (req, res) => {
         return res.sendStatus(500);
     }
 });
-
 router.post('/webhook', async (req, res) => {
     try{
         let data = Whatsapp.parseMessage(req.body);
@@ -90,7 +89,6 @@ router.post('/webhook', async (req, res) => {
         if (data?.isMessage) {
             let incomingMessage = data.message;
             let recipientPhone = incomingMessage.from.phone; 
-           // let recipientName = incomingMessage.from.name
             let typeOfMsg = incomingMessage.type; 
             let message_id = incomingMessage.message_id; 
       
@@ -136,14 +134,14 @@ router.post('/webhook', async (req, res) => {
             let incomingTextMessage = incomingMessage.text.body;
             let filterID = incomingTextMessage.match(/^\d+$/); 
             let count = incomingTextMessage.length;
-           if (filterID !== null  && count === 13) {
+            if (filterID !== null  && count === 13) {
             const users = await bot_views.findAll({
               where: {
                 idnumber: filterID
               },
               limit: 1
             });  
-         if (users && users.length > 0) {
+          if (users && users.length > 0) {
             const userData = users.map(bot_views => `Name: ${bot_views.name} ${bot_views.surname}\nFull Contract: R${bot_views.full_contract_value}\nBalance: R${bot_views.settlement_value}\nDue: R${bot_views.installment_value}`);//closed_lock_with_key
               await Whatsapp.sendSimpleButtons({
                 message: (`*Please find information regarding your account below:*\n\n${userData}\n\n*To continue making your payment, click the button below.*\n\n*`+emoji.get(':exclamation:')+`Please note that updates to the balance will be reflected after 24 hours.*`),
@@ -185,7 +183,6 @@ router.post('/webhook', async (req, res) => {
         const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
         let recipientIndex = Math.floor(Math.random() * recipients.length);
         const recipient = recipients[recipientIndex];
-        console.log(`recipientIndex: ${recipientIndex}, recipient: ${recipient}`);
          await slack.chat.postMessage({
           channel: recipient,
           text: `*A user has requested a transfer to a live agent. User number: +${recipientPhone}.*`,
