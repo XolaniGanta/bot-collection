@@ -10,6 +10,9 @@ const bolds = require('node-strings');
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slack = new WebClient(slackToken);
 
+const team1 = process.env.CHANNEL_ID1;
+const team2 = process.env.CHANNEL_ID2;
+
 const Whatsapp = new WhatsappCloudAPI({
     accessToken: process.env.Meta_WA_accessToken,
     senderPhoneNumberId: process.env.Meta_WA_SenderPhoneNumberId,
@@ -180,7 +183,7 @@ router.post('/webhook', async (req, res) => {
     if (typeOfMsg === 'simple_button_message') {
       let buttonID = incomingMessage.button_reply.id;
       if (buttonID === 'live_agent') {
-        const recipients = ['C04JDHFEJCA', 'C04JG1K9M5J'];
+        const recipients = [team1, team2];
         let recipientIndex = Math.floor(Math.random() * recipients.length);
         const recipient = recipients[recipientIndex];
          await slack.chat.postMessage({
